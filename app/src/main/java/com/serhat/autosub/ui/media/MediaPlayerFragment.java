@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.CompoundButton;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -51,10 +52,12 @@ public class MediaPlayerFragment extends Fragment {
     private TextView statusView;
     private TextView subtitleListView;
     private MaterialButton liveButton;
+    private CompoundButton translateToggle;
     private MainViewModel viewModel;
     private Uri mediaUri;
     private Uri subtitleUri;
     private QueueItem liveQueueItem;
+    private boolean translationRequested;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable captionTicker = new Runnable() {
         @Override public void run() {
@@ -96,9 +99,16 @@ public class MediaPlayerFragment extends Fragment {
         statusView = view.findViewById(R.id.liveStatusTV);
         subtitleListView = view.findViewById(R.id.liveSubtitleListTV);
         liveButton = view.findViewById(R.id.liveTranslateBT);
+        translateToggle = view.findViewById(R.id.translateToggle);
         view.findViewById(R.id.openMediaBT).setOnClickListener(v -> mediaPicker.launch(new String[]{"video/*", "audio/*"}));
         view.findViewById(R.id.openSubtitleBT).setOnClickListener(v -> subtitlePicker.launch(new String[]{"text/*", "application/x-subrip", "text/vtt"}));
         liveButton.setOnClickListener(v -> startOfflineListening());
+        translateToggle.setOnCheckedChangeListener((button, checked) -> {
+            if (liveQueueItem != null) {
+                updateLiveStatus();
+                updateCaption();
+            }
+        });
         viewModel.getQueueItems().observe(getViewLifecycleOwner(), items -> {
             if (mediaUri == null) return;
             liveQueueItem = null;
@@ -141,8 +151,11 @@ public class MediaPlayerFragment extends Fragment {
         if (mediaUri == null) { Toast.makeText(requireContext(), "請先選擇媒體檔案", Toast.LENGTH_SHORT).show(); return; }
         liveButton.setEnabled(false);
         liveButton.setText("正在準備離線聽譯…");
-        statusView.setText("正在使用已選語音模型辨識；完成的句子會依播放位置同步顯示。") ;
-        viewModel.setTranslateSubtitles(true);
+        translationRequested = translateToggle.isChecked();
+        statusView.setText(translationRequested
+                ? "正在辨識並翻譯成繁體中文；完成的句子會依播放位置同步顯示。"
+                : "正在辨識原文；目前不會翻譯字幕。") ;
+        viewModel.setTranslateSubtitles(translationRequested);
         viewModel.setTranslationTargetLanguage("zh");
         List<Uri> uris = new ArrayList<>(); uris.add(mediaUri);
         viewModel.addVideosToQueue(uris, this::displayName, uri -> false);
@@ -151,12 +164,33 @@ public class MediaPlayerFragment extends Fragment {
     private void updateLiveStatus() {
         if (liveQueueItem == null) return;
         if (liveQueueItem.getStatus() == QueueItem.Status.COMPLETED) {
+            if (translationRequested && !liveQueueItem.hasTranslations()) {
+                liveButton.setEnabled(false);
+                liveButton.setText("正在翻譯成繁體中文…");
+                statusView.setText("辨識完成，正在使用裝置端翻譯模型轉換成繁體中文……");
+                viewModel.setTranslationTargetLanguage("zh");
+                viewModel.translateQueueItem(liveQueueItem, new SubtitleGenerator.TranslationCallback() {
+                    @Override public void onTranslated(List<SubtitleGenerator.SubtitleEntry> entries, String source, String target) {
+                        liveQueueItem.setSubtitles(entries);
+                        updateLiveStatus();
+                    }
+                    @Override public void onError(String error) {
+                        liveButton.setEnabled(true);
+                        statusView.setText("翻譯失敗：" + error + "；仍可查看原文字幕。") ;
+                    }
+                    @Override public void onProgressUpdate(int progress) { statusView.setText("正在翻譯成繁體中文…… " + Math.max(0, progress) + "%"); }
+                });
+                translationRequested = false;
+                return;
+            }
             liveButton.setEnabled(true); liveButton.setText("重新開始離線即時聽譯");
-            statusView.setText("聽譯完成；播放影片時會同步顯示原文與繁體中文。") ;
+            statusView.setText(translateToggle.isChecked()
+                    ? "聽譯完成；播放影片時會同步顯示原文與繁體中文。"
+                    : "辨識完成；目前只顯示原文字幕。") ;
             StringBuilder all = new StringBuilder();
             for (SubtitleGenerator.SubtitleEntry e : liveQueueItem.getSubtitles()) {
                 all.append(e.getText());
-                if (e.hasTranslation()) all.append("\n").append(e.getTranslationText());
+                if (translateToggle.isChecked() && e.hasTranslation()) all.append("\n").append(e.getTranslationText());
                 all.append("\n\n");
             }
             subtitleListView.setText(all.toString());
@@ -173,7 +207,7 @@ public class MediaPlayerFragment extends Fragment {
             long start = parseTime(entry.getStartTime()), end = parseTime(entry.getEndTime());
             if (position >= start && position <= end) {
                 text.append(entry.getText());
-                if (entry.hasTranslation()) text.append("\n").append(entry.getTranslationText());
+                if (translateToggle.isChecked() && entry.hasTranslation()) text.append("\n").append(entry.getTranslationText());
                 break;
             }
         }

@@ -73,6 +73,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="開始離線即時聽譯" />
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/translateToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:checked="true"
+            android:text="同步翻譯成繁體中文" />
         <TextView
             android:id="@+id/liveStatusTV"
             android:layout_width="match_parent"

@@ -957,16 +957,32 @@ public class MainViewModel extends AndroidViewModel {
                 VoskModelInfo downloadingModel = modelManager.findById(downloadingId);
                 if (downloadingModel != null) {
                     models.add(downloadingModel);
-                    Collections.sort(models, Comparator.comparing(VoskModelInfo::getLanguage)
-                            .thenComparing(VoskModelInfo::getId));
+                    sortModelsByPriority(models);
                 }
             }
         }
 
-        Collections.sort(models, Comparator.comparing(VoskModelInfo::getLanguage)
-                .thenComparing(VoskModelInfo::getId));
+        sortModelsByPriority(models);
 
         catalogModels.setValue(models);
+    }
+
+    private void sortModelsByPriority(List<VoskModelInfo> models) {
+        Collections.sort(models, Comparator.comparingInt(this::modelLanguagePriority)
+                .thenComparing(VoskModelInfo::getLanguage, String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(VoskModelInfo::getId, String.CASE_INSENSITIVE_ORDER));
+    }
+
+    private int modelLanguagePriority(VoskModelInfo model) {
+        if (model == null) return 99;
+        String value = ((model.getLocale() == null ? "" : model.getLocale()) + " "
+                + (model.getLanguage() == null ? "" : model.getLanguage()) + " "
+                + (model.getId() == null ? "" : model.getId())).toLowerCase(Locale.US);
+        if (value.contains("english") || value.matches(".*(^|[^a-z])en([^a-z]|$).*")) return 0;
+        if (value.contains("japanese") || value.matches(".*(^|[^a-z])ja([^a-z]|$).*")) return 1;
+        if (value.contains("chinese") || value.contains("mandarin")
+                || value.matches(".*(^|[^a-z])(zh|cmn)([^a-z]|$).*")) return 2;
+        return 10;
     }
 
     private VoskModelInfo createGemmaCatalogModel() {
