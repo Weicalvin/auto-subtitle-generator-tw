@@ -36,21 +36,8 @@ jobs:
       - name: 上傳 APK 產物
         uses: actions/upload-artifact@v4
         with:
-          name: AutoSub-debug-apks
-          path: app/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: 建置 Release APK
-        if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
-        run: ./gradlew :app:assembleRelease --stacktrace
-
-      - name: 上傳 Release APK 產物
-        if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v4
-        with:
-          name: AutoSub-release-apks
-          path: app/build/outputs/apk/release/*.apk
+          name: app-arm64-v8a-debug.apk
+          path: app/build/outputs/apk/arm64-v8a/debug/app-arm64-v8a-debug.apk
           if-no-files-found: error
           retention-days: 14
 
@@ -60,7 +47,7 @@ jobs:
           {
             echo '## APK 建置結果'
             echo ''
-            echo 'Debug 與（主分支／手動執行時）Release APK 已上傳到本次工作流的 Artifacts。'
+            echo '目前只建置並上傳 arm64-v8a Debug APK：app-arm64-v8a-debug.apk。'
             echo ''
             find app/build/outputs/apk -type f -name '*.apk' -print 2>/dev/null || true
           } >> "$GITHUB_STEP_SUMMARY"
