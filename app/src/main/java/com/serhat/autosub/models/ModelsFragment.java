@@ -122,7 +122,7 @@ public class ModelsFragment extends Fragment {
                 .setTitle("Download Gemma 4 E2B")
                 .setMessage("Download approximately 2.6 GB from the LiteRT Community model repository. Keep the app connected to power for best results." + memoryWarning)
                 .setPositiveButton("Download", (dialog, which) -> viewModel.startGemmaDownload())
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("取消", null)
                 .show();
     }
 
@@ -415,7 +415,7 @@ public class ModelsFragment extends Fragment {
                     .setTitle("Large model")
                     .setMessage("This model is " + modelInfo.getSize() + ". It can take a long time to download and may be too heavy for a phone to load.")
                     .setPositiveButton("Download", (dialog, which) -> viewModel.startModelDownload(modelInfo))
-                    .setNegativeButton("Cancel", null)
+                    .setNegativeButton("取消", null)
                     .show();
         } else {
             viewModel.startModelDownload(modelInfo);
@@ -426,11 +426,11 @@ public class ModelsFragment extends Fragment {
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Delete model")
                 .setMessage("Delete " + modelInfo.getLanguage() + " from this device?")
-                .setPositiveButton("Delete", (dialog, which) -> {
+                .setPositiveButton("刪除", (dialog, which) -> {
                     viewModel.confirmDeleteModel(modelInfo);
                     Toast.makeText(requireContext(), "Model deleted", Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("取消", null)
                 .show();
     }
 
@@ -438,8 +438,8 @@ public class ModelsFragment extends Fragment {
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Delete Gemma 4 E2B")
                 .setMessage("Remove the 2.6 GB local Shorts model? Saved candidate projects and exported clips are kept.")
-                .setPositiveButton("Delete", (dialog, which) -> viewModel.deleteGemmaModel())
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton("刪除", (dialog, which) -> viewModel.deleteGemmaModel())
+                .setNegativeButton("取消", null)
                 .show();
     }
 

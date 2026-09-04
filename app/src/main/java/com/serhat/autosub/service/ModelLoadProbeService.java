@@ -81,7 +81,7 @@ public class ModelLoadProbeService extends Service {
                 receiver.send(RESULT_OK, Bundle.EMPTY);
             }
         } catch (Throwable throwable) {
-            sendError(receiver, throwable.getMessage() == null ? "Model failed to load" : throwable.getMessage());
+            sendError(receiver, throwable.getMessage() == null ? "模型載入失敗" : throwable.getMessage());
         } finally {
             if (modelManager != null && modelInfo != null) {
                 modelManager.prepareForMobileLoad(modelInfo);

@@ -43,37 +43,37 @@ public final class ExportFileActions {
         File file = new File(filePath == null ? "" : filePath);
         if (video && context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
                 .getBoolean(KEY_HIDE_VIDEO_EXPORTED_DIALOG, false)) {
-            Toast.makeText(context, "Video exported", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "影片已匯出", Toast.LENGTH_SHORT).show();
             return;
         }
         if (!video && context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
                 .getBoolean(KEY_HIDE_SUBTITLE_EXPORTED_DIALOG, false)) {
-            Toast.makeText(context, "Subtitles saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "字幕已儲存", Toast.LENGTH_SHORT).show();
             return;
         }
         AppOptionDialog.Option[] options = video
                 ? new AppOptionDialog.Option[]{
                         new AppOptionDialog.Option(R.drawable.ri_folder_open_line,
-                                "Exports", "Open the Exports screen and browse all saved files."),
+                                "匯出檔", "開啟匯出頁面以瀏覽所有已儲存檔案。"),
                         new AppOptionDialog.Option(R.drawable.ri_folder_settings_line,
                                 "Files", "Open this export's folder in the device file manager."),
                         new AppOptionDialog.Option(R.drawable.ri_share_line,
-                                "Share", "Send this file to another app."),
+                                "分享", "將此檔案傳送至其他應用程式。"),
                         new AppOptionDialog.Option(R.drawable.ri_play_circle_line,
-                                "Play", "Open the exported video in a video player.")
+                                "播放", "在影片播放器中開啟匯出的影片。")
                 }
                 : new AppOptionDialog.Option[]{
                         new AppOptionDialog.Option(R.drawable.ri_folder_open_line,
-                                "Exports", "Open the Exports screen and browse all saved files."),
+                                "匯出檔", "開啟匯出頁面以瀏覽所有已儲存檔案。"),
                         new AppOptionDialog.Option(R.drawable.ri_folder_settings_line,
                                 "Files", "Open this export's folder in the device file manager."),
                         new AppOptionDialog.Option(R.drawable.ri_share_line,
-                                "Share", "Send this file to another app.")
+                                "分享", "將此檔案傳送至其他應用程式。")
                 };
 
         if (video) {
             AppOptionDialog.showWithCheckbox(context,
-                    "Video exported",
+                    "影片已匯出",
                     file.getName(),
                     options,
                     "Don't show this again",
@@ -88,7 +88,7 @@ public final class ExportFileActions {
                     });
         } else {
             AppOptionDialog.showWithCheckbox(context,
-                    "Subtitles saved",
+                    "字幕已儲存",
                     file.getName(),
                     options,
                     "Don't show this again",
@@ -144,7 +144,7 @@ public final class ExportFileActions {
         try {
             context.startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(context, "No app can open this file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "沒有可開啟此檔案的應用程式", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -167,9 +167,9 @@ public final class ExportFileActions {
         shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         try {
-            context.startActivity(Intent.createChooser(shareIntent, "Share export"));
+            context.startActivity(Intent.createChooser(shareIntent, "分享匯出檔"));
         } catch (Exception e) {
-            Toast.makeText(context, "No app can share this file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "沒有可分享此檔案的應用程式", Toast.LENGTH_SHORT).show();
         }
     }
 

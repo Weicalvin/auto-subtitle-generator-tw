@@ -322,7 +322,7 @@ public class ExportsFragment extends Fragment implements ActionMode.Callback {
                 .setTitle("Create folder")
                 .setView(input)
                 .setPositiveButton("Create", (dialog, which) -> createFolder(input.getText().toString()))
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("取消", null)
                 .show();
     }
 
@@ -444,8 +444,8 @@ public class ExportsFragment extends Fragment implements ActionMode.Callback {
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Delete Exports")
                 .setMessage("Are you sure you want to permanently delete the " + count + " selected " + (count == 1 ? "file" : "files") + "? This cannot be undone.")
-                .setPositiveButton("Delete", (dialog, which) -> deleteExports(items))
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton("刪除", (dialog, which) -> deleteExports(items))
+                .setNegativeButton("取消", null)
                 .show();
     }
 

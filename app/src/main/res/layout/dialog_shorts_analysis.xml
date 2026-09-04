@@ -25,7 +25,7 @@
             style="@style/TextAppearance.Material3.TitleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Clips to find"
+            android:text="要尋找的片段數"
             android:textColor="?attr/colorPrimary" />
 
         <TextView
@@ -34,13 +34,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="12dp"
-            android:text="Choose how many suggestions Gemma should return and how long each clip may be."
+            android:text="選擇 Gemma 要回傳的建議數量，以及每個片段的長度。"
             android:textColor="?android:attr/textColorSecondary" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Number of clips"
+            android:hint="片段數量"
             app:boxBackgroundMode="outline"
             app:helperText="1–10 clip suggestions">
 
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"
                 android:layout_weight="1"
-                android:hint="Shortest clip"
+                android:hint="最短片段"
                 app:boxBackgroundMode="outline"
                 app:helperText="Seconds">
 
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_weight="1"
-                android:hint="Longest clip"
+                android:hint="最長片段"
                 app:boxBackgroundMode="outline"
                 app:helperText="Seconds, up to 180">
 
@@ -101,14 +101,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="What Gemma should look for"
+            android:text="希望 AI 尋找的內容"
             android:textColor="?attr/colorPrimary" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Creative direction (optional)"
+            android:hint="創意方向（選填）"
             app:boxBackgroundMode="outline"
             app:helperText="Example: Prioritize practical tutorials with a strong opening hook">
 
@@ -127,7 +127,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="AI processing"
+            android:text="AI 處理"
             android:textColor="?attr/colorPrimary" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
@@ -136,7 +136,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:checked="false"
-            android:text="Enable thinking" />
+            android:text="啟用深度思考" />
 
         <TextView
             style="@style/TextAppearance.Material3.BodySmall"
@@ -144,7 +144,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
             android:paddingEnd="8dp"
-            android:text="May improve clip selection by letting Gemma reason before answering, but analysis takes longer. Off by default."
+            android:text="啟用後可能改善片段選擇，但分析時間會變長。預設關閉。"
             android:textColor="?android:attr/textColorSecondary" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
@@ -152,7 +152,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Use CPU instead of GPU" />
+            android:text="使用 CPU 而非 GPU" />
 
         <TextView
             style="@style/TextAppearance.Material3.BodySmall"
@@ -160,7 +160,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
             android:paddingEnd="8dp"
-            android:text="Keeps the interface more responsive and uses less battery, but analysis is usually slower. On some devices CPU can be faster."
+            android:text="可讓介面更流暢並降低耗電，但分析通常較慢；部分裝置使用 CPU 反而更快。"
             android:textColor="?android:attr/textColorSecondary" />
 
         <TextView
@@ -168,7 +168,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Caption timing"
+            android:text="字幕時間軸"
             android:textColor="?attr/colorPrimary" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
@@ -176,7 +176,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Show one spoken word at a time" />
+            android:text="一次顯示一個口說詞" />
 
         <TextView
             android:id="@+id/wordsPerSubtitleLabel"
@@ -184,7 +184,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Maximum words per subtitle: 10" />
+            android:text="每則字幕最多單字數：10" />
 
         <com.google.android.material.slider.Slider
             android:id="@+id/wordsPerSubtitleSlider"
@@ -218,7 +218,7 @@
             style="@style/Widget.Material3.Button.TextButton.Dialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel" />
+            android:text="取消" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/startAnalysisButton"
@@ -226,6 +226,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Start analysis" />
+            android:text="開始分析" />
     </LinearLayout>
 </LinearLayout>

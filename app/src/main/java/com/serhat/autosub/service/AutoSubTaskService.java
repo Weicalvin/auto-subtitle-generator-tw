@@ -120,7 +120,7 @@ public class AutoSubTaskService extends Service {
     private boolean startedForWork;
     private VoskModelInfo selectedModelInfo;
     private String modelStatusText = "";
-    private String generalStatusText = "Loading speech model...";
+    private String generalStatusText = "正在載入語音模型……";
     private boolean queueRunning;
     private boolean batchRunning;
     private boolean queueCancelRequested;
@@ -227,7 +227,7 @@ public class AutoSubTaskService extends Service {
         if (info == null) {
             modelReady = false;
             modelLoading = false;
-            generalStatusText = "No speech models are available";
+            generalStatusText = "沒有可用的語音模型";
             publishModelState();
             publishIdleStateIfNoWork();
             return;
@@ -258,10 +258,10 @@ public class AutoSubTaskService extends Service {
         modelReady = false;
         modelLoading = true;
         updateSelectedModelViews(info);
-        generalStatusText = "Loading speech model...";
+        generalStatusText = "正在載入語音模型……";
         publishModelState();
         beginForeground(AutoSubTaskState.TaskType.MODEL_LOAD,
-                "Loading speech model", info.getLanguage(), -1);
+                "正在載入語音模型", info.getLanguage(), -1);
 
         VoskModelInfo modelToLoad = info;
         subtitleGenerator.initModel(modelToLoad, new SubtitleGenerator.ModelInitCallback() {
@@ -283,8 +283,8 @@ public class AutoSubTaskService extends Service {
                 handler.post(() -> {
                     modelReady = false;
                     modelLoading = false;
-                    modelStatusText = "Model error";
-                    generalStatusText = "Error initializing model: " + errorMessage;
+                    modelStatusText = "模型錯誤";
+                    generalStatusText = "初始化模型時發生錯誤：" + errorMessage;
                     publishModelState();
                     publishIdleStateIfNoWork();
                 });
@@ -315,13 +315,13 @@ public class AutoSubTaskService extends Service {
                 }
             }
             downloadQueue.add(modelInfo);
-            publishDownloadState("Download queued", modelInfo.getLanguage(), activeDownloadProgress);
+            publishDownloadState("下載已加入佇列", modelInfo.getLanguage(), activeDownloadProgress);
             publishCatalogRefresh();
             return;
         }
 
         beginForeground(AutoSubTaskState.TaskType.MODEL_DOWNLOAD,
-                "Downloading Model: " + modelInfo.getLanguage(), "Starting...", 0);
+                "正在下載模型：" + modelInfo.getLanguage(), "正在開始……", 0);
         activeDownloadModelId = modelInfo.getId();
         activeDownloadProgress = 0;
         activeDownloadSpeedText = "";
@@ -360,7 +360,7 @@ public class AutoSubTaskService extends Service {
                     if (!speed.isEmpty() || !eta.isEmpty()) {
                         content += " (" + speed + " - " + eta + ")";
                     }
-                    publishDownloadState("Downloading Model: " + modelInfo.getLanguage(), content, progress);
+                    publishDownloadState("正在下載模型：" + modelInfo.getLanguage(), content, progress);
                 });
             }
 
@@ -368,7 +368,7 @@ public class AutoSubTaskService extends Service {
             public void onComplete(VoskModelInfo downloadedModel) {
                 handler.post(() -> {
                     clearActiveDownload();
-                    showSuccessNotificationIfEnabled(1001, "Model Download Complete",
+                    showSuccessNotificationIfEnabled(1001, "模型下載完成",
                             downloadedModel.getLanguage() + " model downloaded successfully.");
                     updateSelectedModelViews(modelManager.getSelectedModel());
                     publishModelState();
@@ -393,10 +393,10 @@ public class AutoSubTaskService extends Service {
                 handler.post(() -> {
                     activeDownloadTask = null;
                     activeDownloadModelId = modelInfo.getId();
-                    activeDownloadSpeedText = "Paused";
+                    activeDownloadSpeedText = "已暫停";
                     activeDownloadEtaText = "";
                     activeDownloadPaused = true;
-                    publishDownloadState("Download Paused: " + modelInfo.getLanguage(),
+                    publishDownloadState("下載已暫停：" + modelInfo.getLanguage(),
                             activeDownloadProgress + "%", activeDownloadProgress);
                     publishCatalogRefresh();
                 });
@@ -459,7 +459,7 @@ public class AutoSubTaskService extends Service {
         gemmaError = "";
         gemmaDownloadPaused = false;
         beginForeground(AutoSubTaskState.TaskType.GEMMA_MODEL_DOWNLOAD,
-                "Downloading Gemma 4 E2B", "Preparing model download...", 0);
+                "正在下載 Gemma 4 E2B", "正在準備模型下載……", 0);
         activeGemmaDownloadTask = gemmaModelManager.startDownload(new GemmaModelManager.DownloadCallback() {
             @Override public void onProgress(int progress, long received, long total, String speed, String eta) {
                 handler.post(() -> {
@@ -468,7 +468,7 @@ public class AutoSubTaskService extends Service {
                     gemmaDownloadEta = eta;
                     publishGemmaState();
                     publishState(new AutoSubTaskState(AutoSubTaskState.TaskType.GEMMA_MODEL_DOWNLOAD,
-                            "Downloading Gemma 4 E2B", speed + (eta.isEmpty() ? "" : " - " + eta), progress,
+                            "正在下載 Gemma 4 E2B", speed + (eta.isEmpty() ? "" : " - " + eta), progress,
                             -1, null, speed, eta, gemmaDownloadPaused,
                             queueRunning, queuedDownloadIds()));
                 });
@@ -538,7 +538,7 @@ public class AutoSubTaskService extends Service {
                               String focusPrompt, boolean preferGpu, boolean enableThinking) {
         if (shortsAnalyzing) { publishShortsProject(null, "Shorts analysis is already running"); return; }
         if (!ShortsLlmEngineFactory.isSupported()) { publishShortsProject(null, "AI Shorts requires Android 12 or newer"); return; }
-        if (!gemmaModelManager.isInstalled()) { publishShortsProject(null, "Download Gemma 4 E2B from Models first"); return; }
+        if (!gemmaModelManager.isInstalled()) { publishShortsProject(null, "請先從模型頁面下載 Gemma 4 E2B"); return; }
         if (item == null || item.getSubtitles() == null || item.getSubtitles().isEmpty()) {
             publishShortsProject(null, "Generate subtitles for this video first"); return;
         }
@@ -560,9 +560,9 @@ public class AutoSubTaskService extends Service {
         modelStatusText = "Speech model temporarily unloaded to free memory";
         subtitleGenerator.unloadModel();
         publishModelState();
-        updateShortsAnalysisQueueItem(item, "Preparing the local Shorts editor...");
+        updateShortsAnalysisQueueItem(item, "正在準備本機 Shorts 編輯器……");
         beginForeground(AutoSubTaskState.TaskType.GEMMA_MODEL_LOAD,
-                "Loading Gemma 4 E2B", "Preparing the local Shorts editor...", -1, item.getId());
+                "正在載入 Gemma 4 E2B", "正在準備本機 Shorts 編輯器……", -1, item.getId());
         ShortsAnalysisRequest request = new ShortsAnalysisRequest(item.getId(), item.getSubtitles(),
                 desiredCount, minSeconds, maxSeconds, focusPrompt);
         new Thread(() -> {
@@ -639,17 +639,17 @@ public class AutoSubTaskService extends Service {
         }
         List<ShortsCandidate> selected = new ArrayList<>();
         for (ShortsCandidate candidate : project.getCandidates()) if (candidate.isSelected()) selected.add(candidate);
-        if (selected.isEmpty()) { publishShortsProject(project, "Select at least one clip"); return; }
+        if (selected.isEmpty()) { publishShortsProject(project, "請至少選取一個片段"); return; }
         batchRunning = true;
         shortsExportCancelRequested = false;
-        beginForeground(AutoSubTaskState.TaskType.SHORTS_EXPORT, "Exporting Shorts", "Preparing clips...", 0);
+        beginForeground(AutoSubTaskState.TaskType.SHORTS_EXPORT, "正在匯出 Shorts", "正在準備片段……", 0);
         exportNextShort(item, project, selected, 0, outputDir);
     }
 
     public void exportPhraseMontage(QueueItem item, ShortsProject project, File outputDir,
                                     SubtitleGenerator.VideoExportCallback callback) {
         if (item == null || project == null || !project.isPhraseMontage()) {
-            callback.onError("No phrase montage is ready");
+            callback.onError("尚未準備好片段組合");
             return;
         }
         if (batchRunning || queueRunning || shortsAnalyzing) {
@@ -781,7 +781,7 @@ public class AutoSubTaskService extends Service {
                             item.setStatus(QueueItem.Status.COMPLETED);
                             item.setProgress(100);
                             item.setOutputPath(filePath);
-                            item.setMessage((subtitleFile ? "Subtitles" : "Video") + " exported: " + filePath);
+                            item.setMessage((subtitleFile ? "字幕" : "影片") + " 已匯出：" + filePath);
                             queueStore.updateItem(item);
                             publishQueueItems();
                             publishIdleStateIfNoWork();
@@ -818,7 +818,7 @@ public class AutoSubTaskService extends Service {
             batchRunning = false;
             shortsExportCancelRequested = false;
             shortsProjectStore.save(project);
-            publishShortsProject(project, "Export cancelled");
+            publishShortsProject(project, "匯出已取消");
             publishIdleStateIfNoWork();
             return;
         }
@@ -848,7 +848,7 @@ public class AutoSubTaskService extends Service {
         publishShortsProject(project, "");
         int baseProgress = index * 100 / selected.size();
         publishState(new AutoSubTaskState(AutoSubTaskState.TaskType.SHORTS_EXPORT,
-                "Exporting Shorts", "Rendering " + (index + 1) + " of " + selected.size(), baseProgress,
+                "正在匯出 Shorts", "正在渲染 " + (index + 1) + "／" + selected.size(), baseProgress,
                 item.getId(), null, "", "", false, false, queuedDownloadIds()));
         SubtitleGenerator.ShortsSubtitleStyle style = new SubtitleGenerator.ShortsSubtitleStyle(0.5f, 0.72f,
                 settingsPrefs.getFloat("shorts_caption_size", 30f),
@@ -904,7 +904,7 @@ public class AutoSubTaskService extends Service {
             return;
         }
         beginForeground(AutoSubTaskState.TaskType.SUBTITLE_GENERATION,
-                "Generating Subtitles", "Starting queue...", -1);
+                "正在產生字幕", "正在啟動佇列……", -1);
         queueRunning = true;
         queueCancelRequested = false;
         processNextQueueItem();
@@ -919,7 +919,7 @@ public class AutoSubTaskService extends Service {
             } else {
                 cancelledActiveQueueItemIds.add(activeQueueItem.getId());
                 activeQueueItem.setStatus(QueueItem.Status.CANCELLED);
-                activeQueueItem.setMessage("Cancelled");
+                activeQueueItem.setMessage("已取消");
                 activeQueueItem.setProgress(0);
                 queueStore.updateItem(activeQueueItem);
                 activeQueueItem = null;
@@ -949,7 +949,7 @@ public class AutoSubTaskService extends Service {
             case ANALYZING_SHORTS:
                 // Signal the native cancel and show feedback; the analysis thread restores the item
                 // once the cancel actually unwinds, which is not always immediate.
-                item.setMessage("Cancelling…");
+                item.setMessage("正在取消……");
                 publishQueueItems(item);
                 cancelShortsAnalysis();
                 break;
@@ -972,7 +972,7 @@ public class AutoSubTaskService extends Service {
             case PENDING:
                 // Not started yet: mark it cancelled so the queue skips over it.
                 item.setStatus(QueueItem.Status.CANCELLED);
-                item.setMessage("Cancelled");
+                item.setMessage("已取消");
                 item.setProgress(0);
                 queueStore.updateItem(item);
                 publishQueueItems();
@@ -994,7 +994,7 @@ public class AutoSubTaskService extends Service {
                                      SubtitleGenerator.SubtitleLayerMode layerMode,
                                      SubtitleGenerator.SubtitleSaveCallback callback) {
         if (videoUri == null || entries == null || entries.isEmpty()) {
-            callback.onError("No video or subtitles available to save");
+            callback.onError("沒有可儲存的影片或字幕");
             return;
         }
         beginForeground(AutoSubTaskState.TaskType.SUBTITLE_SAVE,
@@ -1034,11 +1034,11 @@ public class AutoSubTaskService extends Service {
                                    SubtitleGenerator.SubtitleLayerMode layerMode,
                                    SubtitleGenerator.VideoExportCallback callback) {
         if (videoUri == null || entries == null || entries.isEmpty()) {
-            callback.onError("No video or subtitles available to export");
+            callback.onError("沒有可匯出的影片或字幕");
             return;
         }
         beginForeground(AutoSubTaskState.TaskType.VIDEO_EXPORT,
-                "Exporting Video", burnSubtitles ? "Hard subtitles" : "Soft subtitles", -1);
+                "正在匯出影片", burnSubtitles ? "硬字幕" : "軟字幕", -1);
         subtitleGenerator.exportVideoWithSubtitles(videoUri, entries, burnSubtitles, fontName, shortsStyle,
                 forceMp4SoftSubtitles, outputDir, layerMode, new SubtitleGenerator.VideoExportCallback() {
                     @Override
@@ -1047,7 +1047,7 @@ public class AutoSubTaskService extends Service {
                             registerExport(filePath, ExportRecord.TYPE_VIDEO, videoUri, getDisplayNameHelper(videoUri),
                                     (burnSubtitles ? "hard-" : "soft-") + layerMode.name().toLowerCase(Locale.US) + "-subtitles",
                                     filePath.toLowerCase(Locale.getDefault()).endsWith(".mkv") ? "mkv" : "mp4", modelInfo);
-                            showSuccessNotificationIfEnabled(3001, "Video Export Complete", "Video exported successfully.");
+                            showSuccessNotificationIfEnabled(3001, "影片匯出完成", "影片已成功匯出。");
                             publishIdleStateIfNoWork();
                             callback.onVideoExported(filePath);
                         });
@@ -1065,7 +1065,7 @@ public class AutoSubTaskService extends Service {
                     public void onProgressUpdate(int progress) {
                         handler.post(() -> {
                             publishState(new AutoSubTaskState(AutoSubTaskState.TaskType.VIDEO_EXPORT,
-                                    "Exporting Video", progress < 0 ? "Working..." : progress + "%",
+                                    "正在匯出影片", progress < 0 ? "處理中……" : progress + "%",
                                     progress, -1, activeDownloadModelId, activeDownloadSpeedText,
                                     activeDownloadEtaText, activeDownloadPaused, queueRunning, queuedDownloadIds()));
                             callback.onProgressUpdate(progress);
@@ -1084,7 +1084,7 @@ public class AutoSubTaskService extends Service {
                                           SubtitleGenerator.SubtitleLayerMode layerMode,
                                           SubtitleGenerator.SubtitleSaveCallback callback) {
         if (item == null || item.getVideoUri() == null || item.getSubtitles().isEmpty()) {
-            callback.onError("No video or subtitles available to save");
+            callback.onError("沒有可儲存的影片或字幕");
             return;
         }
         beginForeground(AutoSubTaskState.TaskType.SUBTITLE_SAVE,
@@ -1106,11 +1106,11 @@ public class AutoSubTaskService extends Service {
                                         SubtitleGenerator.SubtitleLayerMode layerMode,
                                         SubtitleGenerator.VideoExportCallback callback) {
         if (item == null || item.getVideoUri() == null || item.getSubtitles().isEmpty()) {
-            callback.onError("No video or subtitles available to export");
+            callback.onError("沒有可匯出的影片或字幕");
             return;
         }
         beginForeground(AutoSubTaskState.TaskType.VIDEO_EXPORT,
-                "Exporting Video: " + item.getDisplayName(), "Starting...", -1);
+                "正在匯出影片：" + item.getDisplayName(), "正在開始……", -1);
         exportVideoForQueueItemInternal(item, burnSubtitles, fontName, shortsStyle,
                 forceMp4SoftSubtitles, outputDir, modelInfo, layerMode, callback);
     }
@@ -1118,17 +1118,17 @@ public class AutoSubTaskService extends Service {
     public void translateQueueItem(QueueItem item, String sourceLanguage, String targetLanguage,
                                    SubtitleGenerator.TranslationCallback callback) {
         if (item == null || item.getSubtitles().isEmpty()) {
-            callback.onError("No subtitles available to translate");
+            callback.onError("沒有可翻譯的字幕");
             return;
         }
         item.setStatus(QueueItem.Status.TRANSLATING);
         item.setProgress(-1);
-        item.setMessage("Translating subtitles...");
+        item.setMessage("正在翻譯字幕……");
         item.setTranslationStatus("translating");
         queueStore.updateItem(item);
         publishQueueItems();
         beginForeground(AutoSubTaskState.TaskType.SUBTITLE_SAVE,
-                "Translating Subtitles: " + item.getDisplayName(), "Starting...", -1);
+                "正在翻譯字幕：" + item.getDisplayName(), "正在開始……", -1);
 
         subtitleGenerator.setTranslationSettings(true, sourceLanguage, targetLanguage);
         subtitleGenerator.translateExistingSubtitles(item.getSubtitles(), new SubtitleGenerator.TranslationCallback() {
@@ -1142,7 +1142,7 @@ public class AutoSubTaskService extends Service {
                     item.setPreviewText(getPreviewTextHelper(subtitleEntries));
                     item.setStatus(QueueItem.Status.COMPLETED);
                     item.setProgress(100);
-                    item.setMessage("Translated subtitles");
+                    item.setMessage("字幕翻譯完成");
                     queueStore.updateItem(item);
                     publishQueueItems();
                     publishIdleStateIfNoWork();
@@ -1156,7 +1156,7 @@ public class AutoSubTaskService extends Service {
                     item.setStatus(QueueItem.Status.COMPLETED);
                     item.setProgress(100);
                     item.setTranslationStatus("failed");
-                    item.setMessage("Translation failed: " + errorMessage);
+                    item.setMessage("翻譯失敗：" + errorMessage);
                     queueStore.updateItem(item);
                     publishQueueItems();
                     publishIdleStateIfNoWork();
@@ -1168,11 +1168,11 @@ public class AutoSubTaskService extends Service {
             public void onProgressUpdate(int progress) {
                 handler.post(() -> {
                     item.setProgress(progress);
-                    item.setMessage(progress < 0 ? "Translating subtitles..." : "Translating subtitles... " + progress + "%");
+                    item.setMessage(progress < 0 ? "正在翻譯字幕……" : "正在翻譯字幕…… " + progress + "%");
                     queueStore.updateItem(item);
                     publishQueueItems();
                     publishState(new AutoSubTaskState(AutoSubTaskState.TaskType.SUBTITLE_SAVE,
-                            "Translating Subtitles: " + item.getDisplayName(), item.getMessage(),
+                            "正在翻譯字幕：" + item.getDisplayName(), item.getMessage(),
                             progress, item.getId(), activeDownloadModelId, activeDownloadSpeedText,
                             activeDownloadEtaText, activeDownloadPaused, queueRunning, queuedDownloadIds()));
                     callback.onProgressUpdate(progress);
@@ -1184,11 +1184,11 @@ public class AutoSubTaskService extends Service {
     public void batchSaveSubtitles(List<QueueItem> items, String format, File outputDir, VoskModelInfo modelInfo,
                                    SubtitleGenerator.SubtitleSaveCallback callback) {
         if (items == null || items.isEmpty()) {
-            callback.onError("No completed items with subtitles to export");
+            callback.onError("沒有可匯出的已完成字幕項目");
             return;
         }
         beginForeground(AutoSubTaskState.TaskType.BATCH_SUBTITLE_SAVE,
-                "Batch Subtitle Export", "Starting...", -1);
+                "Batch Subtitle Export", "正在開始……", -1);
         batchRunning = true;
         batchSaveNext(items, 0, format, outputDir, modelInfo, callback);
     }
@@ -1197,11 +1197,11 @@ public class AutoSubTaskService extends Service {
                                   VoskModelInfo modelInfo, BatchStyleResolver styleResolver,
                                   SubtitleGenerator.VideoExportCallback callback) {
         if (items == null || items.isEmpty()) {
-            callback.onError("No completed items with subtitles to export");
+            callback.onError("沒有可匯出的已完成字幕項目");
             return;
         }
         beginForeground(AutoSubTaskState.TaskType.BATCH_VIDEO_EXPORT,
-                "Batch Video Export", "Starting...", -1);
+                "Batch Video Export", "正在開始……", -1);
         batchRunning = true;
         batchExportNext(items, 0, burnSubtitles, fontName, outputDir, modelInfo, styleResolver, callback);
     }
@@ -1238,7 +1238,7 @@ public class AutoSubTaskService extends Service {
         activeQueueItem = queueItem;
         queueItem.setStatus(QueueItem.Status.PROCESSING);
         queueItem.setProgress(-1);
-        queueItem.setMessage("Extracting audio...");
+        queueItem.setMessage("正在擷取音訊……");
         String permanentAudioPath = new File(getFilesDir(), "audio_" + queueItem.getId() + ".wav").getAbsolutePath();
         queueItem.setAudioPath(permanentAudioPath);
         queueStore.updateItem(queueItem);
@@ -1266,7 +1266,7 @@ public class AutoSubTaskService extends Service {
                 settingsPrefs.getString(KEY_TRANSLATION_TARGET_LANGUAGE,
                         SubtitleGenerator.getDefaultTranslationTargetLanguage()));
         publishState(new AutoSubTaskState(AutoSubTaskState.TaskType.SUBTITLE_GENERATION,
-                "Generating Subtitles: " + queueItem.getDisplayName(), "Extracting audio...",
+                "Generating Subtitles: " + queueItem.getDisplayName(), "正在擷取音訊……",
                 -1, queueItem.getId(), activeDownloadModelId, activeDownloadSpeedText,
                 activeDownloadEtaText, activeDownloadPaused, true, queuedDownloadIds()));
 
@@ -1317,7 +1317,7 @@ public class AutoSubTaskService extends Service {
                                     if ("vtt".equals(format)) queueItem.setVttPath(filePath);
                                     queueStore.updateItem(queueItem);
                                     showSuccessNotificationIfEnabled(2001,
-                                            "Subtitles Generated", "Subtitles saved for " + queueItem.getDisplayName());
+                                            "字幕產生完成", "字幕已儲存：" + queueItem.getDisplayName());
                                     publishQueueItems();
                                     processNextQueueItem();
                                 });
@@ -1389,7 +1389,7 @@ public class AutoSubTaskService extends Service {
                         return;
                     }
                     queueItem.setStatus(QueueItem.Status.CANCELLED);
-                    queueItem.setMessage("Cancelled");
+                    queueItem.setMessage("已取消");
                     queueStore.updateItem(queueItem);
                     activeQueueItem = null;
                     queueRunning = false;
@@ -1402,21 +1402,21 @@ public class AutoSubTaskService extends Service {
 
     private String subtitleProgressMessage(int progress) {
         if (progress == SubtitleGenerator.PROGRESS_TRANSLATING) {
-            return "Translating subtitles...";
+            return "正在翻譯字幕……";
         }
         if (SubtitleGenerator.isScanningSpeechProgress(progress)) {
-            return "Detecting speech...";
+            return "正在偵測語音……";
         }
         if (progress == SubtitleGenerator.PROGRESS_DETECTING_LANGUAGE) {
-            return "Detecting language...";
+            return "正在偵測語言……";
         }
         if (progress == SubtitleGenerator.PROGRESS_PREPARING_AUDIO) {
-            return "Preparing audio...";
+            return "正在準備音訊……";
         }
         if (progress < 0) {
-            return "Extracting audio...";
+            return "正在擷取音訊……";
         }
-        return "Generating subtitles...";
+        return "正在產生字幕……";
     }
 
     private void saveSubtitlesForQueueItemInternal(QueueItem item, String format, File outputDir, VoskModelInfo modelInfo,
@@ -1424,7 +1424,7 @@ public class AutoSubTaskService extends Service {
                                                    SubtitleGenerator.SubtitleSaveCallback callback) {
         item.setStatus(QueueItem.Status.EXPORTING);
         item.setProgress(0);
-        item.setMessage("Saving subtitles...");
+        item.setMessage("正在儲存字幕……");
         queueStore.updateItem(item);
         publishQueueItems();
 
@@ -1440,7 +1440,7 @@ public class AutoSubTaskService extends Service {
                     item.setStatus(QueueItem.Status.COMPLETED);
                     item.setProgress(100);
                     item.setOutputPath(filePath);
-                    item.setMessage("Subtitles saved: " + filePath);
+                    item.setMessage("字幕已儲存：" + filePath);
                     queueStore.updateItem(item);
                     publishQueueItems();
                     publishIdleStateIfNoWork();
@@ -1452,7 +1452,7 @@ public class AutoSubTaskService extends Service {
             public void onError(String errorMessage) {
                 handler.post(() -> {
                     item.setStatus(QueueItem.Status.COMPLETED);
-                    item.setMessage("Failed to save: " + errorMessage);
+                    item.setMessage("儲存失敗：" + errorMessage);
                     queueStore.updateItem(item);
                     publishQueueItems();
                     publishIdleStateIfNoWork();
@@ -1469,7 +1469,7 @@ public class AutoSubTaskService extends Service {
                                                  SubtitleGenerator.VideoExportCallback callback) {
         item.setStatus(QueueItem.Status.EXPORTING);
         item.setProgress(-1);
-        item.setMessage("Exporting video...");
+        item.setMessage("正在匯出影片……");
         queueStore.updateItem(item);
         publishQueueItems();
 
@@ -1485,11 +1485,11 @@ public class AutoSubTaskService extends Service {
                             else item.setSoftVideoPath(filePath);
                             item.setStatus(QueueItem.Status.COMPLETED);
                             item.setProgress(100);
-                            item.setMessage("Video exported: " + filePath);
+                            item.setMessage("影片已匯出：" + filePath);
                             queueStore.updateItem(item);
                             publishQueueItems();
                             showSuccessNotificationIfEnabled(3001,
-                                    "Video Export Complete", "Video exported successfully: " + item.getDisplayName());
+                                    "影片匯出完成", "影片已成功匯出：" + item.getDisplayName());
                             publishIdleStateIfNoWork();
                             callback.onVideoExported(filePath);
                         });
@@ -1499,7 +1499,7 @@ public class AutoSubTaskService extends Service {
                     public void onError(String errorMessage) {
                         handler.post(() -> {
                             item.setStatus(QueueItem.Status.COMPLETED);
-                            item.setMessage("Failed to export: " + errorMessage);
+                            item.setMessage("匯出失敗：" + errorMessage);
                             queueStore.updateItem(item);
                             publishQueueItems();
                             publishIdleStateIfNoWork();
@@ -1511,11 +1511,11 @@ public class AutoSubTaskService extends Service {
                     public void onProgressUpdate(int progress) {
                         handler.post(() -> {
                             item.setProgress(progress);
-                            item.setMessage(progress < 0 ? "Exporting video..." : "Exporting video... " + progress + "%");
+                            item.setMessage(progress < 0 ? "正在匯出影片……" : "正在匯出影片…… " + progress + "%");
                             queueStore.updateItem(item);
                             publishQueueItems();
                             publishState(new AutoSubTaskState(AutoSubTaskState.TaskType.VIDEO_EXPORT,
-                                    "Exporting Video: " + item.getDisplayName(), item.getMessage(),
+                                    "正在匯出影片：" + item.getDisplayName(), item.getMessage(),
                                     progress, item.getId(), activeDownloadModelId, activeDownloadSpeedText,
                                     activeDownloadEtaText, activeDownloadPaused, queueRunning, queuedDownloadIds()));
                             callback.onProgressUpdate(progress);
@@ -1529,12 +1529,12 @@ public class AutoSubTaskService extends Service {
         if (index >= items.size()) {
             batchRunning = false;
             publishIdleStateIfNoWork();
-            callback.onSubtitlesSaved("All subtitles exported successfully!");
+            callback.onSubtitlesSaved("字幕已全部匯出！");
             return;
         }
         QueueItem item = items.get(index);
         publishState(new AutoSubTaskState(AutoSubTaskState.TaskType.BATCH_SUBTITLE_SAVE,
-                "Batch Subtitle Export", (index + 1) + " of " + items.size() + ": " + item.getDisplayName(),
+                "Batch Subtitle Export", (index + 1) + "／" + items.size() + ": " + item.getDisplayName(),
                 -1, item.getId(), activeDownloadModelId, activeDownloadSpeedText, activeDownloadEtaText,
                 activeDownloadPaused, queueRunning, queuedDownloadIds()));
         saveSubtitlesForQueueItemInternal(item, format, outputDir, modelInfo, SubtitleGenerator.SubtitleLayerMode.ORIGINAL, new SubtitleGenerator.SubtitleSaveCallback() {
@@ -1556,12 +1556,12 @@ public class AutoSubTaskService extends Service {
         if (index >= items.size()) {
             batchRunning = false;
             publishIdleStateIfNoWork();
-            callback.onVideoExported("All videos exported successfully!");
+            callback.onVideoExported("影片已全部匯出！");
             return;
         }
         QueueItem item = items.get(index);
         publishState(new AutoSubTaskState(AutoSubTaskState.TaskType.BATCH_VIDEO_EXPORT,
-                "Batch Video Export", (index + 1) + " of " + items.size() + ": " + item.getDisplayName(),
+                "Batch Video Export", (index + 1) + "／" + items.size() + ": " + item.getDisplayName(),
                 -1, item.getId(), activeDownloadModelId, activeDownloadSpeedText, activeDownloadEtaText,
                 activeDownloadPaused, queueRunning, queuedDownloadIds()));
         SubtitleGenerator.ShortsSubtitleStyle style = styleResolver == null ? null : styleResolver.styleFor(item);
@@ -1701,11 +1701,11 @@ public class AutoSubTaskService extends Service {
         if (state.getTaskType() == AutoSubTaskState.TaskType.MODEL_DOWNLOAD
                 || state.getTaskType() == AutoSubTaskState.TaskType.GEMMA_MODEL_DOWNLOAD) {
             builder.addAction(state.isDownloadPaused() ? R.drawable.ri_play_line : R.drawable.ri_pause_line,
-                    state.isDownloadPaused() ? "Resume" : "Pause",
+                    state.isDownloadPaused() ? "繼續" : "暫停",
                     serviceAction(state.isDownloadPaused() ? ACTION_RESUME_DOWNLOAD : ACTION_PAUSE_DOWNLOAD, 1));
-            builder.addAction(R.drawable.ri_close_line, "Cancel", serviceAction(ACTION_CANCEL_DOWNLOAD, 2));
+            builder.addAction(R.drawable.ri_close_line, "取消", serviceAction(ACTION_CANCEL_DOWNLOAD, 2));
         } else if (isMediaTask(state.getTaskType())) {
-            builder.addAction(R.drawable.ri_close_line, "Cancel", serviceAction(ACTION_CANCEL_MEDIA, 3));
+            builder.addAction(R.drawable.ri_close_line, "取消", serviceAction(ACTION_CANCEL_MEDIA, 3));
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -1775,11 +1775,11 @@ public class AutoSubTaskService extends Service {
         if (state.getTaskType() == AutoSubTaskState.TaskType.MODEL_DOWNLOAD
                 || state.getTaskType() == AutoSubTaskState.TaskType.GEMMA_MODEL_DOWNLOAD) {
             builder.addAction(state.isDownloadPaused() ? R.drawable.ri_play_line : R.drawable.ri_pause_line,
-                    state.isDownloadPaused() ? "Resume" : "Pause",
+                    state.isDownloadPaused() ? "繼續" : "暫停",
                     serviceAction(state.isDownloadPaused() ? ACTION_RESUME_DOWNLOAD : ACTION_PAUSE_DOWNLOAD, 11));
-            builder.addAction(R.drawable.ri_close_line, "Cancel", serviceAction(ACTION_CANCEL_DOWNLOAD, 12));
+            builder.addAction(R.drawable.ri_close_line, "取消", serviceAction(ACTION_CANCEL_DOWNLOAD, 12));
         } else if (isMediaTask(state.getTaskType())) {
-            builder.addAction(R.drawable.ri_close_line, "Cancel", serviceAction(ACTION_CANCEL_MEDIA, 13));
+            builder.addAction(R.drawable.ri_close_line, "取消", serviceAction(ACTION_CANCEL_MEDIA, 13));
         }
         try {
             NotificationManagerCompat.from(this).notify(notificationId, builder.build());
@@ -2003,7 +2003,7 @@ public class AutoSubTaskService extends Service {
             }
         } catch (Exception ignored) {
         }
-        return "Video";
+        return "影片";
     }
 
     private String getPreviewTextHelper(List<SubtitleGenerator.SubtitleEntry> entries) {

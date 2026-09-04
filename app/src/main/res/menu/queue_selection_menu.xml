@@ -4,16 +4,16 @@
     <item
         android:id="@+id/action_select_all_queue"
         android:icon="@drawable/ri_checkbox_circle_line"
-        android:title="Select All"
+        android:title="全選"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_export_selected"
         android:icon="@drawable/ri_export_line"
-        android:title="Export Selected"
+        android:title="匯出所選項目"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_delete_selected"
         android:icon="@drawable/ri_delete_bin_line"
-        android:title="Delete Selected"
+        android:title="刪除所選項目"
         app:showAsAction="always" />
 </menu>

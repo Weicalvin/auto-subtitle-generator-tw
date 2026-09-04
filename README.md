@@ -273,3 +273,17 @@ The app module uses:
 - [Material Components for Android](https://github.com/material-components/material-components-android)
 </content>
 </invoke>
+
+## 繁體中文介面與 APK 建置
+
+本版本已將 App 畫面、選單、按鈕、對話框、設定選項、提示訊息及背景工作通知翻譯為繁體中文；模型名稱、Whisper、VAD、FFmpeg、SRT、VTT 等技術名稱則予以保留。
+
+專案內建 GitHub Actions 工作流：`.github/workflows/build-apk.yml`。當 `master`／`main` 有 push 或 pull request 時，會執行單元測試並建置 Debug APK；push 到主分支或手動執行工作流時，另外建置 Release APK。APK 會以 Artifacts 形式提供下載，支援 `arm64-v8a`、`armeabi-v7a`、`x86` 與 `x86_64`，目前 Gradle 設定會輸出各 ABI 的 APK。
+
+### 下載 APK
+
+1. 開啟 GitHub 儲存庫的 **Actions** 頁面。
+2. 選擇 **建置 Android APK** 工作流；也可以按 **Run workflow** 手動啟動。
+3. 開啟成功完成的執行紀錄，在 **Artifacts** 下載 `AutoSub-debug-apks` 或 `AutoSub-release-apks`。
+
+目前未在專案中配置正式 release signing；工作流產出的 Release APK 可供測試。若要發布到商店，請在 GitHub Secrets 配置正式簽章金鑰，不要將私鑰提交到儲存庫。

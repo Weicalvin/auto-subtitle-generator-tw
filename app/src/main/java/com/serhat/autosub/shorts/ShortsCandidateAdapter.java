@@ -73,7 +73,7 @@ public class ShortsCandidateAdapter extends RecyclerView.Adapter<ShortsCandidate
             preview = view.findViewById(R.id.candidatePreviewBT);
             renderStatus = view.findViewById(R.id.candidateRenderStatusTV);
             layer.setAdapter(new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item,
-                    new String[]{"Original", "Translation", "Both"}));
+                    new String[]{"原文", "翻譯", "Both"}));
         }
 
         void bind(ShortsCandidate item) {

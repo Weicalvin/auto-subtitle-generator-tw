@@ -134,12 +134,12 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
                     executePendingPermissionOperation();
                 } else if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     new MaterialAlertDialogBuilder(requireContext())
-                            .setTitle("AutoSub needs permission")
-                            .setMessage("This app requires WRITE_EXTERNAL_STORAGE permission to save files to permanent storage")
-                            .setPositiveButton("Give Permission", (dialog, which) -> {
+                            .setTitle("自動字幕產生器需要權限")
+                            .setMessage("此應用程式需要 WRITE_EXTERNAL_STORAGE 權限，才能將檔案儲存至永久儲存空間")
+                            .setPositiveButton("授予權限", (dialog, which) -> {
                                 executePendingPermissionOperation();
                             })
-                            .setNegativeButton("Cancel", null)
+                            .setNegativeButton("取消", null)
                             .show();
                 }
             }
@@ -238,11 +238,11 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
                         binding.playerFrame.setVisibility(View.VISIBLE);
                         
                         binding.fallbackWarningLayout.setVisibility(View.VISIBLE);
-                        binding.fallbackWarningTV.setText("Video source inaccessible (app restarted). Playing extracted audio fallback.");
+                        binding.fallbackWarningTV.setText("影片來源無法存取（應用程式已重新啟動），改為播放擷取的音訊。");
                     } else {
                         binding.playerFrame.setVisibility(View.GONE);
                         binding.fallbackWarningLayout.setVisibility(View.VISIBLE);
-                        binding.fallbackWarningTV.setText("Video source inaccessible (app restarted). Please select the video again.");
+                        binding.fallbackWarningTV.setText("影片來源無法存取（應用程式已重新啟動），請重新選擇影片。");
                     }
                 }
             } else {
@@ -331,8 +331,8 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
                 ? R.drawable.ri_arrow_down_s_line
                 : R.drawable.ri_arrow_up_s_line);
         binding.shortsHeightToggleBT.setContentDescription(shortsVideoCollapsedForEditing
-                ? "Expand shorts video preview"
-                : "Shrink video for subtitle editing");
+                ? "展開 Shorts 影片預覽"
+                : "縮小影片以編輯字幕");
     }
 
     private void setupShortsCaptionDragging() {
@@ -501,7 +501,7 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
     private void showSubtitleAdjustMode() {
         android.net.Uri videoUri = viewModel.getCurrentVideoUri().getValue();
         if (videoUri == null || !isUriAccessible(videoUri)) {
-            Toast.makeText(requireContext(), "Video is not available for adjustment", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "影片目前無法調整", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -534,10 +534,10 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
                 Gravity.CENTER));
 
         MaterialButton doneButton = new MaterialButton(requireContext());
-        doneButton.setText("Done");
+        doneButton.setText("完成");
         doneButton.setIconResource(R.drawable.ri_checkbox_circle_line);
         doneButton.setIconPadding(dpToPx(6));
-        doneButton.setContentDescription("Done");
+        doneButton.setContentDescription("完成");
         FrameLayout.LayoutParams doneParams = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 dpToPx(48),
@@ -744,43 +744,43 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
             android.widget.LinearLayout layout = new android.widget.LinearLayout(requireContext());
             layout.setOrientation(android.widget.LinearLayout.VERTICAL);
             final EditText originalInput = new EditText(requireContext());
-            originalInput.setHint("Original");
+            originalInput.setHint("原文");
             originalInput.setText(entry.getText());
             final EditText translationInput = new EditText(requireContext());
-            translationInput.setHint("Translation");
+            translationInput.setHint("翻譯");
             translationInput.setText(entry.getTranslationText());
             layout.addView(originalInput);
             layout.addView(translationInput);
             new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Edit Subtitle")
+                    .setTitle("編輯字幕")
                     .setView(layout)
-                    .setPositiveButton("Save", (dialog, which) -> {
+                    .setPositiveButton("儲存", (dialog, which) -> {
                         viewModel.updateSubtitle(position, originalInput.getText().toString(), translationInput.getText().toString());
                     })
-                    .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
+                    .setNegativeButton("取消", (dialog, which) -> dialog.cancel())
                     .show();
             return;
         }
         final EditText input = new EditText(requireContext());
         input.setText(entry.getText());
         new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Edit Subtitle")
+                .setTitle("編輯字幕")
                 .setView(input)
-                .setPositiveButton("Save", (dialog, which) -> {
+                .setPositiveButton("儲存", (dialog, which) -> {
                     viewModel.updateSubtitle(position, input.getText().toString());
                 })
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
+                .setNegativeButton("取消", (dialog, which) -> dialog.cancel())
                 .show();
     }
 
     private void deleteSubtitle(int position) {
         new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Delete Subtitle")
+                .setTitle("刪除字幕")
                 .setMessage("Are you sure you want to delete this subtitle?")
-                .setPositiveButton("Yes", (dialog, which) -> {
+                .setPositiveButton("是", (dialog, which) -> {
                     viewModel.deleteSubtitle(position);
                 })
-                .setNegativeButton("No", null)
+                .setNegativeButton("否", null)
                 .show();
     }
 
@@ -812,7 +812,7 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
         if (id == R.id.action_merge) {
             Set<Integer> selected = subtitleAdapter.getSelectedPositions();
             if (selected.size() < 2) {
-                Toast.makeText(requireContext(), "Select at least two subtitles to merge", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "請至少選取兩則字幕以合併", Toast.LENGTH_SHORT).show();
                 return false;
             }
             viewModel.mergeSelectedSubtitles(selected);
@@ -857,20 +857,20 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
 
     private void showExportOptions() {
         AppOptionDialog.show(requireContext(),
-                "Export",
-                "Choose what AutoSub should create from these subtitles.",
+                "匯出",
+                "選擇自動字幕產生器要從這些字幕建立的內容。",
                 new AppOptionDialog.Option[]{
                         new AppOptionDialog.Option(
-                                "SRT subtitle file",
+                                "SRT 字幕檔",
                                 "Most common subtitle format. Works with many editors, players, and upload sites."),
                         new AppOptionDialog.Option(
-                                "VTT subtitle file",
+                                "VTT 字幕檔",
                                 "Web-friendly subtitle format for browsers and HTML video workflows."),
                         new AppOptionDialog.Option(
-                                "Soft subtitle video",
+                                "軟字幕影片",
                                 "Add a subtitle track that can be turned on or off in compatible players."),
                         new AppOptionDialog.Option(
-                                "Hard subtitle video",
+                                "硬字幕影片",
                                 "Burn subtitles into the video image so they show everywhere.")
                 }, which -> {
                     if (which == 0) {
@@ -895,7 +895,7 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
 
     private void saveSubtitlesInFormat(String format) {
         chooseSubtitleLayerMode(layerMode ->
-                ExportFolderDialog.show(this, "Save to folder", outputDir ->
+                ExportFolderDialog.show(this, "儲存至資料夾", outputDir ->
                         executeSaveSubtitles(format, outputDir, layerMode)));
     }
 
@@ -915,7 +915,7 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
             public void onError(String errorMessage) {
                 if (!isAdded()) return;
                 binding.progressBar.setVisibility(View.GONE);
-                if (errorMessage != null && errorMessage.startsWith("Already exported subtitles")) {
+                if (errorMessage != null && errorMessage.startsWith("字幕已匯出")) {
                     showAlreadyExistsDialog(errorMessage, false, () -> {
                         String prefix = "Already exported subtitles for this video and model: ";
                         String filename = errorMessage.substring(prefix.length());
@@ -936,7 +936,7 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
                         ExportFileActions.shareFile(requireContext(), targetFile);
                     });
                 } else {
-                    setStatusMessage("Error saving subtitles: " + errorMessage);
+                    setStatusMessage("儲存字幕時發生錯誤：" + errorMessage);
                 }
             }
         });
@@ -952,7 +952,7 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
 
     private void choosePositionedSoftExportFormat(SubtitleGenerator.SubtitleLayerMode layerMode) {
         AppOptionDialog.show(requireContext(),
-                "Soft subtitle format",
+                "軟字幕格式",
                 "Adjusted subtitle positions need a container that can preserve styling.",
                 new AppOptionDialog.Option[]{
                         new AppOptionDialog.Option(
@@ -966,7 +966,7 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
 
     private void startExport(boolean burnSubtitles, String fontName, boolean forceMp4SoftSubtitles,
                              SubtitleGenerator.SubtitleLayerMode layerMode) {
-        ExportFolderDialog.show(this, "Export to folder", outputDir -> {
+        ExportFolderDialog.show(this, "匯出至資料夾", outputDir -> {
             executeVideoExport(burnSubtitles, fontName, forceMp4SoftSubtitles, outputDir, layerMode);
         });
     }
@@ -982,7 +982,7 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
             public void onVideoExported(String filePath) {
                 if (!isAdded()) return;
                 binding.progressBar.setVisibility(View.GONE);
-                setStatusMessage("Video exported: " + filePath);
+                setStatusMessage("影片已匯出：" + filePath);
                 ExportFileActions.showExportCompleteDialog(PreviewFragment.this, viewModel, filePath, true);
             }
 
@@ -1011,7 +1011,7 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
                         ExportFileActions.shareFile(requireContext(), targetFile);
                     });
                 } else {
-                    setStatusMessage("Error exporting video: " + errorMessage);
+                    setStatusMessage("匯出影片時發生錯誤：" + errorMessage);
                 }
             }
 
@@ -1035,12 +1035,12 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
             return;
         }
         AppOptionDialog.show(requireContext(),
-                "Subtitle language",
-                "Choose which subtitle text to export.",
+                "字幕語言",
+                "選擇要匯出的字幕文字。",
                 new AppOptionDialog.Option[]{
-                        new AppOptionDialog.Option("Original", "Export the source subtitles."),
-                        new AppOptionDialog.Option("Translation", "Export the translated subtitles."),
-                        new AppOptionDialog.Option("Double", "Export original first, translation second.")
+                        new AppOptionDialog.Option("原文", "匯出原文字幕。"),
+                        new AppOptionDialog.Option("翻譯", "匯出翻譯字幕。"),
+                        new AppOptionDialog.Option("Double", "先匯出原文，再匯出翻譯。")
                 }, which -> {
                     if (which == 1) {
                         callback.onChosen(SubtitleGenerator.SubtitleLayerMode.TRANSLATION);
@@ -1059,16 +1059,16 @@ public class PreviewFragment extends Fragment implements ActionMode.Callback {
         String prefix = isVideo ? "Already exported this video with this model: " : "Already exported subtitles for this video and model: ";
         String filename = errorMessage.substring(prefix.length());
 
-        String title = isVideo ? "Video Already Exported" : "Subtitles Already Saved";
-        String message = "The following file already exists in your export library folder:\n\n" + filename + "\n\nWould you like to overwrite it, open/play it, or share it?";
+        String title = isVideo ? "影片已匯出" : "字幕已儲存";
+        String message = "以下檔案已存在於匯出資料夾：\n\n" + filename + "\n\nWould you like to overwrite it, open/play it, or share it?";
 
         AppOptionDialog.Option[] options = new AppOptionDialog.Option[]{
                 new AppOptionDialog.Option(R.drawable.ri_delete_bin_line,
-                        "Overwrite File", "Replace the existing file with your new export."),
+                        "覆寫檔案", "Replace the existing file with your new export."),
                 new AppOptionDialog.Option(isVideo ? R.drawable.ri_play_circle_line : R.drawable.ri_file_text_line,
-                        isVideo ? "Play Video" : "Open Subtitles", isVideo ? "Watch the previously exported video." : "View the previously saved subtitle file."),
+                        isVideo ? "播放影片" : "開啟字幕", isVideo ? "觀看先前匯出的影片。" : "檢視先前儲存的字幕檔。"),
                 new AppOptionDialog.Option(R.drawable.ri_share_line,
-                        "Share Existing File", "Send the existing file to another application.")
+                        "分享現有檔案", "Send the existing file to another application.")
         };
 
         AppOptionDialog.show(requireContext(), title, message, options, which -> {

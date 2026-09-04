@@ -221,7 +221,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ModelViewHol
             if (downloading) {
                 deleteBT.setVisibility(View.VISIBLE);
                 deleteBT.setIconResource(R.drawable.ri_close_line);
-                deleteBT.setText("Cancel");
+                deleteBT.setText("取消");
                 deleteBT.setContentDescription("Cancel download");
                 deleteBT.setOnClickListener(v -> {
                     if (listener != null) listener.onCancelDownload(modelInfo);
@@ -262,14 +262,14 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ModelViewHol
                 primaryBT.setEnabled(false);
             } else if (downloading) {
                 if (activeDownloadPaused) {
-                    primaryBT.setText("Resume");
+                    primaryBT.setText("繼續");
                     primaryBT.setIconResource(R.drawable.ri_play_line);
                     primaryBT.setContentDescription("Resume download " + activeDownloadProgress + "%");
                     primaryBT.setOnClickListener(v -> {
                         if (listener != null) listener.onResumeDownload(modelInfo);
                     });
                 } else {
-                    primaryBT.setText("Pause");
+                    primaryBT.setText("暫停");
                     primaryBT.setIconResource(R.drawable.ri_pause_line);
                     primaryBT.setContentDescription("Pause download " + activeDownloadProgress + "%");
                     primaryBT.setOnClickListener(v -> {
@@ -278,7 +278,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ModelViewHol
                 }
                 primaryBT.setEnabled(true);
             } else if (hasPartial) {
-                primaryBT.setText("Resume");
+                primaryBT.setText("繼續");
                 primaryBT.setIconResource(R.drawable.ri_play_line);
                 primaryBT.setContentDescription("Resume download");
                 primaryBT.setEnabled(true);
@@ -302,7 +302,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ModelViewHol
 
                 deleteBT.setVisibility(View.VISIBLE);
                 deleteBT.setIconResource(R.drawable.ri_close_line);
-                deleteBT.setText("Cancel");
+                deleteBT.setText("取消");
                 deleteBT.setContentDescription("Cancel queued download");
                 deleteBT.setOnClickListener(v -> {
                     if (listener != null) listener.onCancelQueuedDownload(modelInfo);
@@ -344,7 +344,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ModelViewHol
             addChip("Shorts");
             addChip("Heavy");
             if (gemmaDownloading) addChip("Downloading");
-            else if (gemmaDownloadPaused) addChip("Paused");
+            else if (gemmaDownloadPaused) addChip("已暫停");
 
             downloadProgress.setVisibility(gemmaDownloading || gemmaDownloadPaused ? View.VISIBLE : View.GONE);
             downloadProgress.setProgress(Math.max(0, gemmaDownloadProgress));
@@ -352,7 +352,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ModelViewHol
             if (gemmaDownloading || gemmaDownloadPaused) {
                 deleteBT.setVisibility(View.VISIBLE);
                 deleteBT.setIconResource(R.drawable.ri_close_line);
-                deleteBT.setText("Cancel");
+                deleteBT.setText("取消");
                 deleteBT.setContentDescription("Cancel Gemma download");
                 deleteBT.setOnClickListener(v -> {
                     if (listener != null) listener.onCancelDownload(modelInfo);
@@ -383,7 +383,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ModelViewHol
                 primaryBT.setEnabled(false);
                 primaryBT.setOnClickListener(null);
             } else if (gemmaDownloading) {
-                primaryBT.setText("Pause");
+                primaryBT.setText("暫停");
                 primaryBT.setIconResource(R.drawable.ri_pause_line);
                 primaryBT.setContentDescription("Pause Gemma download " + gemmaDownloadProgress + "%");
                 primaryBT.setEnabled(true);
@@ -391,7 +391,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ModelViewHol
                     if (listener != null) listener.onPauseDownload(modelInfo);
                 });
             } else if (gemmaDownloadPaused) {
-                primaryBT.setText("Resume");
+                primaryBT.setText("繼續");
                 primaryBT.setIconResource(R.drawable.ri_play_line);
                 primaryBT.setContentDescription("Resume Gemma download");
                 primaryBT.setEnabled(true);
@@ -449,7 +449,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ModelViewHol
             }
             if (downloading) addChip("Downloading");
             else if (queued) addChip("Queued");
-            else if (hasPartial) addChip("Paused");
+            else if (hasPartial) addChip("已暫停");
         }
 
         private void addChip(String text) {

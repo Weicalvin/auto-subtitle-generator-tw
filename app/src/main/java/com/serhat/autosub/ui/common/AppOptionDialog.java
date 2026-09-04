@@ -175,7 +175,7 @@ public final class AppOptionDialog {
         AlertDialog dialog = new MaterialAlertDialogBuilder(context)
                 .setTitle(title)
                 .setView(scrollView)
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("取消", null)
                 .create();
         dialogRef[0] = dialog;
         dialog.show();

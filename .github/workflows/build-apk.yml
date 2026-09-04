@@ -1,0 +1,91 @@
+name: 建置 Android APK
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  JAVA_VERSION: '17'
+
+jobs:
+  build-apk:
+    name: 建置 APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: 取出原始碼
+        uses: actions/checkout@v4
+
+      - name: 設定 JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: 設定 Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: 建置 Debug APK
+        run: ./gradlew :app:assembleDebug --stacktrace
+
+      - name: 上傳 APK 產物
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoSub-debug-apks
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: 建置 Release APK
+        if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+        run: ./gradlew :app:assembleRelease --stacktrace
+
+      - name: 上傳 Release APK 產物
+        if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoSub-release-apks
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: 建立摘要
+        if: always()
+        run: |
+          {
+            echo '## APK 建置結果'
+            echo ''
+            echo 'Debug 與（主分支／手動執行時）Release APK 已上傳到本次工作流的 Artifacts。'
+            echo ''
+            find app/build/outputs/apk -type f -name '*.apk' -print 2>/dev/null || true
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  unit-tests:
+    name: 執行單元測試
+    runs-on: ubuntu-latest
+    steps:
+      - name: 取出原始碼
+        uses: actions/checkout@v4
+      - name: 設定 JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+      - name: 設定 Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: 執行測試
+        run: ./gradlew :app:testDebugUnitTest --stacktrace
+      - name: 上傳測試報告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoSub-test-report
+          path: app/build/reports/tests/testDebugUnitTest
+          if-no-files-found: warn
+          retention-days: 14
+      

@@ -25,7 +25,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Batch subtitles"
+                android:text="批次字幕格式"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:alpha="0.75"
-                    android:text="Maximum words per subtitle"
+                    android:text="每則字幕最大單字數"
                     android:textSize="13sp" />
 
                 <TextView
@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:checked="true"
-                android:text="Keep sentences together" />
+                android:text="保持句子完整" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/suppressWhisperSdhSwitch"
@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:checked="true"
-                android:text="Remove Whisper SDH captions" />
+                android:text="移除 Whisper SDH 字幕" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/whisperVadSwitch"
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:checked="true"
-                android:text="Use VAD to skip silence for Whisper" />
+                android:text="使用 VAD 跳過 Whisper 靜音" />
 
             <TextView
                 android:id="@+id/whisperVadModelLabelTV"
@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:alpha="0.75"
-                android:text="Whisper VAD model"
+                android:text="Whisper VAD 模型"
                 android:textSize="13sp" />
 
             <Spinner
@@ -132,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:alpha="0.75"
-                android:text="Whisper VAD aggressiveness"
+                android:text="Whisper VAD 靈敏度"
                 android:textSize="13sp" />
 
             <Spinner
@@ -146,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:alpha="0.75"
-                android:text="Whisper language"
+                android:text="Whisper 語言"
                 android:textSize="13sp" />
 
             <Spinner
@@ -160,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:alpha="0.75"
-                android:text="Whisper thread count"
+                android:text="Whisper 執行緒數"
                 android:textSize="13sp" />
 
             <Spinner
@@ -174,7 +174,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="Translate subtitles" />
+                android:text="翻譯字幕" />
 
             <TextView
                 android:id="@+id/translationSourceLabelTV"
@@ -182,7 +182,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:alpha="0.75"
-                android:text="Translation source"
+                android:text="翻譯來源"
                 android:textSize="13sp" />
 
             <Spinner
@@ -197,7 +197,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:alpha="0.75"
-                android:text="Translation target"
+                android:text="翻譯目標"
                 android:textSize="13sp" />
 
             <Spinner
@@ -222,7 +222,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Export location"
+                android:text="匯出位置"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -231,7 +231,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:alpha="0.75"
-                android:text="Private keeps exports out of gallery apps and deletes them if AutoSub is uninstalled. Movies saves to Movies/AutoSub for files you want to keep or share."
+                android:text="私人模式會將匯出檔排除在相簿應用程式之外，且在解除安裝自動字幕產生器時刪除。Movies 會儲存到 Movies/AutoSub，適合保留或分享。"
                 android:textSize="13sp" />
 
             <com.google.android.material.button.MaterialButtonToggleGroup
@@ -248,7 +248,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Private" />
+                    android:text="私人" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/exportPublicBT"
@@ -275,7 +275,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Shorts preview"
+                android:text="Shorts 預覽"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -284,7 +284,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:alpha="0.75"
-                android:text="Caption size"
+                android:text="字幕大小"
                 android:textSize="13sp" />
 
             <com.google.android.material.slider.Slider
@@ -302,28 +302,28 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:checked="true"
-                android:text="Uppercase highlighted word" />
+                android:text="將目前單字以大寫顯示" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/shortsWordByWordSwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Use word-by-word for vertical videos" />
+                android:text="垂直影片使用逐字字幕" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/skipShortsDialogSwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Do not ask about Shorts mode" />
+                android:text="不要再詢問 Shorts 模式" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/shortsSmoothAutoFramingSwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Use smooth panning in auto framer" />
+                android:text="在自動取景時使用平滑移動" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -341,7 +341,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Notifications"
+                android:text="通知"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -351,7 +351,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:checked="true"
-                android:text="Show completion notifications" />
+                android:text="顯示完成通知" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/showRamUsageSwitch"
@@ -359,7 +359,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:checked="true"
-                android:text="Show RAM usage on Generate screen" />
+                android:text="在產生頁面顯示記憶體用量" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

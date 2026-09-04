@@ -846,7 +846,7 @@ public class SubtitleGenerator {
                 fos.close();
                 callback.onSubtitlesSaved(subtitleFile.getAbsolutePath());
             } catch (IOException e) {
-                callback.onError("Error saving subtitles: " + e.getMessage());
+                callback.onError("儲存字幕時發生錯誤：" + e.getMessage());
             }
         });
     }
@@ -1202,7 +1202,7 @@ public class SubtitleGenerator {
 
             } catch (IOException e) {
                 DebugLog.e(TAG, "Error exporting video with subtitles", e);
-                callback.onError("Error exporting video: " + e.getMessage());
+                callback.onError("匯出影片時發生錯誤：" + e.getMessage());
             } finally {
                 if (subtitleFile != null && subtitleFile.exists()) {
                     subtitleFile.delete();
@@ -1722,7 +1722,7 @@ public class SubtitleGenerator {
                     long startMs = parseSubtitleTime(entry.getStartTime());
                     long endMs = parseSubtitleTime(entry.getEndTime());
                     writeAssDialogue(writer, startMs, endMs, entry.getText(), "Default", style, x, y - Math.max(28, fontSize));
-                    writeAssDialogue(writer, startMs, endMs, entry.getTranslationText(), "Translation", style, x, y + Math.max(28, Math.round(fontSize * 0.35f)));
+                    writeAssDialogue(writer, startMs, endMs, entry.getTranslationText(), "翻譯", style, x, y + Math.max(28, Math.round(fontSize * 0.35f)));
                 } else {
                     String text = layerMode == SubtitleLayerMode.TRANSLATION && entry.hasTranslation()
                             ? entry.getTranslationText()

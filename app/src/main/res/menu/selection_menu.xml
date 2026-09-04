@@ -4,11 +4,11 @@
     <item
         android:id="@+id/action_merge"
         android:icon="@drawable/ri_git_merge_line"
-        android:title="Merge"
+        android:title="合併"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_delete"
         android:icon="@drawable/ri_delete_bin_line"
-        android:title="Delete"
+        android:title="刪除"
         app:showAsAction="always" />
 </menu>

@@ -5,20 +5,20 @@
     <item
         android:id="@+id/select_video_menu"
         android:icon="@drawable/ri_video_add_line"
-        android:title="Add Videos"
+        android:title="新增影片"
         app:showAsAction="always"
         android:visible="false"/>
 
     <item
         android:id="@+id/manage_models_menu"
         android:icon="@drawable/ri_download_line"
-        android:title="Models"
+        android:title="模型"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/open_project_menu"
         android:icon="@drawable/ri_github_line"
-        android:title="See on GitHub"
+        android:title="在 GitHub 查看"
         app:showAsAction="ifRoom"/>
 
 

@@ -349,7 +349,7 @@ public class ShortsReviewFragment extends Fragment {
                         project.getMinDurationSeconds() + "–" + project.getMaxDurationSeconds() + " seconds.")
                 .setView(content)
                 .setPositiveButton("Apply", (dialog, which) -> applyRange(candidate, start, end))
-                .setNegativeButton("Cancel", null).show();
+                .setNegativeButton("取消", null).show();
     }
 
     private EditText decimalField(String hint, double value) {

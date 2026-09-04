@@ -98,7 +98,7 @@ public class MainViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> modelReady = new MutableLiveData<>(false);
     private final MutableLiveData<VoskModelInfo> selectedModelInfo = new MutableLiveData<>();
     private final MutableLiveData<String> modelStatusText = new MutableLiveData<>("");
-    private final MutableLiveData<String> generalStatusText = new MutableLiveData<>("Loading speech model...");
+    private final MutableLiveData<String> generalStatusText = new MutableLiveData<>("正在載入語音模型……");
     private final MutableLiveData<List<VoskModelInfo>> catalogModels = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<String> activeDownloadModelId = new MutableLiveData<>(null);
     private final MutableLiveData<Integer> activeDownloadProgress = new MutableLiveData<>(0);
@@ -613,7 +613,7 @@ public class MainViewModel extends AndroidViewModel {
                         match.getStartSubtitleId(), match.getEndSubtitleId(),
                         match.getStartMs(), match.getEndMs(),
                         "Match " + (i + 1) + ": " + phrase,
-                        "", keepWholeSubtitle ? "Complete subtitle cue" : "Exact phrase timing", 100);
+                        "", keepWholeSubtitle ? "完成字幕片段" : "精確片語時間", 100);
                 candidate.setBurnCaptions(false);
                 candidates.add(candidate);
             }
@@ -630,7 +630,7 @@ public class MainViewModel extends AndroidViewModel {
             saveShortsProject(phraseProject);
             navigateToShortsTrigger.setValue(true);
         } catch (Exception error) {
-            shortsError.setValue(error.getMessage() == null ? "Could not create phrase montage" : error.getMessage());
+            shortsError.setValue(error.getMessage() == null ? "無法建立片語組合" : error.getMessage());
         }
     }
 
@@ -638,7 +638,7 @@ public class MainViewModel extends AndroidViewModel {
         QueueItem item = selectedQueueItem.getValue();
         ShortsProject project = shortsProject.getValue();
         if (item == null || project == null || !project.isPhraseMontage()) {
-            callback.onError("No phrase montage is ready");
+            callback.onError("尚未準備好片段組合");
             return;
         }
         saveShortsProject(project);
@@ -884,7 +884,7 @@ public class MainViewModel extends AndroidViewModel {
             modelManager.loadCatalog();
             refreshModels(currentQuery, currentCheckedChipId);
         } catch (IOException e) {
-            generalStatusText.setValue("Error loading model catalog");
+            generalStatusText.setValue("載入模型目錄時發生錯誤");
         }
     }
 
@@ -976,7 +976,7 @@ public class MainViewModel extends AndroidViewModel {
                 "ai-shorts",
                 "2.6 GB",
                 "Gemma Terms",
-                "On-device AI Shorts editor • Android 12+ • text only",
+                "裝置端 AI Shorts 編輯器 • Android 12+ • 僅支援文字",
                 "",
                 false,
                 "",
@@ -1004,7 +1004,7 @@ public class MainViewModel extends AndroidViewModel {
         VoskModelInfo info = modelManager.getSelectedModel();
         selectedModelInfo.setValue(info);
         if (info == null) {
-            generalStatusText.setValue("No speech models are available");
+            generalStatusText.setValue("沒有可用的語音模型");
             return;
         }
 
@@ -1019,7 +1019,7 @@ public class MainViewModel extends AndroidViewModel {
 
         modelReady.setValue(false);
         updateSelectedModelViews(info);
-        generalStatusText.setValue("Loading speech model...");
+        generalStatusText.setValue("正在載入語音模型……");
         boolean allowHeavy = allowHeavyModelLoad;
         allowHeavyModelLoad = false;
         runWhenTaskServiceReady(true, () -> taskService.initializeSelectedModel(allowHeavy));
@@ -1048,7 +1048,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void maybeSelectModel(VoskModelInfo modelInfo, ProbeCallback callback) {
         if (singleGenerationRunning || Boolean.TRUE.equals(queueRunning.getValue())) {
-            callback.onProbeError("Wait for current generation to finish before switching models");
+            callback.onProbeError("請等待目前產生工作完成後再切換模型");
             return;
         }
         if (!modelInfo.isWhisper() && (modelInfo.isVeryLarge() || !modelInfo.isMobileRecommended())) {
@@ -1093,7 +1093,7 @@ public class MainViewModel extends AndroidViewModel {
                     selectModel(modelInfo);
                     callback.onProbeSuccess();
                 } else {
-                    String error = resultData != null ? resultData.getString(ModelLoadProbeService.EXTRA_ERROR, "Model failed to load") : "Model failed to load";
+                    String error = resultData != null ? resultData.getString(ModelLoadProbeService.EXTRA_ERROR, "模型載入失敗") : "模型載入失敗";
                     callback.onProbeError(error);
                 }
             }
@@ -1194,7 +1194,7 @@ public class MainViewModel extends AndroidViewModel {
                     NotificationHelper.showProgressNotification(
                             getApplication(),
                             1001,
-                            "Downloading Model: " + modelInfo.getLanguage(),
+                            "正在下載模型：" + modelInfo.getLanguage(),
                             progressContent,
                             progress
                     );
@@ -1215,7 +1215,7 @@ public class MainViewModel extends AndroidViewModel {
                     NotificationHelper.showSuccessNotification(
                             getApplication(),
                             1001,
-                            "Model Download Complete",
+                            "模型下載完成",
                             downloadedModel.getLanguage() + " model downloaded successfully."
                     );
                     
@@ -1243,7 +1243,7 @@ public class MainViewModel extends AndroidViewModel {
             @Override
             public void onPaused() {
                 handler.post(() -> {
-                    activeDownloadSpeedText.setValue("Paused");
+                    activeDownloadSpeedText.setValue("已暫停");
                     activeDownloadEtaText.setValue("");
                     activeDownloadPaused.setValue(true);
                     
@@ -1251,7 +1251,7 @@ public class MainViewModel extends AndroidViewModel {
                     NotificationHelper.showProgressNotification(
                             getApplication(),
                             1001,
-                            "Download Paused: " + modelInfo.getLanguage(),
+                            "下載已暫停：" + modelInfo.getLanguage(),
                             progress + "%",
                             progress
                     );
@@ -1374,7 +1374,7 @@ public class MainViewModel extends AndroidViewModel {
                 }
             }
         } catch (Exception e) {
-            DebugLog.e("MainViewModel", "Error generating thumbnail", e);
+            DebugLog.e("MainViewModel", "產生縮圖時發生錯誤", e);
         } finally {
             try {
                 retriever.release();
@@ -1394,9 +1394,9 @@ public class MainViewModel extends AndroidViewModel {
             boolean wordByWordCaptions = settingsPrefs.getBoolean(KEY_SHORTS_MODE_WORD_BY_WORD, false);
             for (Uri uri : uris) {
                 QueueItem item = new QueueItem(uri, nameResolver.resolve(uri));
-                // "Shorts mode" for an item means word-by-word captions, which only applies when the
+                // "Shorts 模式" for an item means word-by-word captions, which only applies when the
                 // video is vertical AND the user picked word-by-word in the Shorts dialog. A vertical
-                // video with "Standard captions" is treated as a normal video.
+                // video with "標準字幕" is treated as a normal video.
                 item.setShortsVideo(rotationResolver.isVertical(uri) && wordByWordCaptions);
                 item.setUseVad(useVad);
                 long id = queueStore.addItem(item);
@@ -1482,7 +1482,7 @@ public class MainViewModel extends AndroidViewModel {
         activeQueueItem = queueItem;
         queueItem.setStatus(QueueItem.Status.PROCESSING);
         queueItem.setProgress(-1);
-        queueItem.setMessage("Extracting audio...");
+        queueItem.setMessage("正在擷取音訊……");
         
         String permanentAudioPath = new java.io.File(getApplication().getFilesDir(), "audio_" + queueItem.getId() + ".wav").getAbsolutePath();
         queueItem.setAudioPath(permanentAudioPath);
@@ -1538,8 +1538,8 @@ public class MainViewModel extends AndroidViewModel {
                 NotificationHelper.showSuccessNotification(
                         getApplication(),
                         2001,
-                        "Subtitles Generated",
-                        "Subtitles saved for " + queueItem.getDisplayName()
+                        "字幕產生完成",
+                        "字幕已儲存：" + queueItem.getDisplayName()
                 );
                 
                 queueItem.setSubtitles(entries);
@@ -1639,7 +1639,7 @@ public class MainViewModel extends AndroidViewModel {
                     }
                     NotificationHelper.cancelNotification(getApplication(), 2001);
                     queueItem.setStatus(QueueItem.Status.CANCELLED);
-                    queueItem.setMessage("Cancelled");
+                    queueItem.setMessage("已取消");
                     activeQueueItem = null;
                     queueRunning.setValue(false);
                     refreshQueue();
@@ -1650,21 +1650,21 @@ public class MainViewModel extends AndroidViewModel {
 
     private String subtitleProgressMessage(int progress) {
         if (progress == SubtitleGenerator.PROGRESS_TRANSLATING) {
-            return "Translating subtitles...";
+            return "正在翻譯字幕……";
         }
         if (SubtitleGenerator.isScanningSpeechProgress(progress)) {
-            return "Detecting speech...";
+            return "正在偵測語音……";
         }
         if (progress == SubtitleGenerator.PROGRESS_DETECTING_LANGUAGE) {
-            return "Detecting language...";
+            return "正在偵測語言……";
         }
         if (progress == SubtitleGenerator.PROGRESS_PREPARING_AUDIO) {
-            return "Preparing audio...";
+            return "正在準備音訊……";
         }
         if (progress < 0) {
-            return "Extracting audio...";
+            return "正在擷取音訊……";
         }
-        return "Generating subtitles...";
+        return "正在產生字幕……";
     }
 
     /** Cancel whatever work a specific queue item is running (subtitle generation, export,
@@ -1692,7 +1692,7 @@ public class MainViewModel extends AndroidViewModel {
                 finishRemovedActiveQueueItem(activeQueueItem);
             } else {
                 activeQueueItem.setStatus(QueueItem.Status.CANCELLED);
-                activeQueueItem.setMessage("Cancelled");
+                activeQueueItem.setMessage("已取消");
                 activeQueueItem.setProgress(0);
                 queueStore.updateItem(activeQueueItem);
                 activeQueueItem = null;
@@ -2079,7 +2079,7 @@ public class MainViewModel extends AndroidViewModel {
         Uri videoUri = currentVideoUri.getValue();
         List<SubtitleGenerator.SubtitleEntry> entries = subtitleEntries.getValue();
         if (videoUri == null || entries == null || entries.isEmpty()) {
-            callback.onError("No video or subtitles available to save");
+            callback.onError("沒有可儲存的影片或字幕");
             return;
         }
 
@@ -2159,7 +2159,7 @@ public class MainViewModel extends AndroidViewModel {
         Uri videoUri = currentVideoUri.getValue();
         List<SubtitleGenerator.SubtitleEntry> entries = subtitleEntries.getValue();
         if (videoUri == null || entries == null || entries.isEmpty()) {
-            callback.onError("No video or subtitles available to export");
+            callback.onError("沒有可匯出的影片或字幕");
             return;
         }
 
@@ -2217,8 +2217,8 @@ public class MainViewModel extends AndroidViewModel {
                     NotificationHelper.showSuccessNotification(
                             getApplication(),
                             3001,
-                            "Video Export Complete",
-                            "Video exported successfully."
+                            "影片匯出完成",
+                            "影片已成功匯出。"
                     );
                     
                     callback.onVideoExported(filePath);
@@ -2239,7 +2239,7 @@ public class MainViewModel extends AndroidViewModel {
                     NotificationHelper.showProgressNotification(
                             getApplication(),
                             3001,
-                            "Exporting Video",
+                            "正在匯出影片",
                             progress + "%",
                             progress
                     );
@@ -2284,7 +2284,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void translateQueueItem(QueueItem item, SubtitleGenerator.TranslationCallback callback) {
         if (item == null || item.getSubtitles().isEmpty()) {
-            callback.onError("No subtitles available to translate");
+            callback.onError("沒有可翻譯的字幕");
             return;
         }
         if (useTaskService()) {
@@ -2302,7 +2302,7 @@ public class MainViewModel extends AndroidViewModel {
 
         item.setStatus(QueueItem.Status.TRANSLATING);
         item.setProgress(-1);
-        item.setMessage("Translating subtitles...");
+        item.setMessage("正在翻譯字幕……");
         item.setTranslationStatus("translating");
         refreshQueue();
 
@@ -2319,7 +2319,7 @@ public class MainViewModel extends AndroidViewModel {
                     item.setTranslationStatus("translated");
                     item.setStatus(QueueItem.Status.COMPLETED);
                     item.setProgress(100);
-                    item.setMessage("Translated subtitles");
+                    item.setMessage("字幕翻譯完成");
                     item.setPreviewText(getPreviewTextHelper(subtitleEntries));
                     QueueItem selected = selectedQueueItem.getValue();
                     if (selected != null && selected.getId() == item.getId()) {
@@ -2336,7 +2336,7 @@ public class MainViewModel extends AndroidViewModel {
                     item.setStatus(QueueItem.Status.COMPLETED);
                     item.setProgress(100);
                     item.setTranslationStatus("failed");
-                    item.setMessage("Translation failed: " + errorMessage);
+                    item.setMessage("翻譯失敗：" + errorMessage);
                     refreshQueue();
                     callback.onError(errorMessage);
                 });
@@ -2346,7 +2346,7 @@ public class MainViewModel extends AndroidViewModel {
             public void onProgressUpdate(int progress) {
                 handler.post(() -> {
                     item.setProgress(progress);
-                    item.setMessage(progress < 0 ? "Translating subtitles..." : "Translating subtitles... " + progress + "%");
+                    item.setMessage(progress < 0 ? "正在翻譯字幕……" : "正在翻譯字幕…… " + progress + "%");
                     refreshQueue();
                     callback.onProgressUpdate(progress);
                 });
@@ -2373,7 +2373,7 @@ public class MainViewModel extends AndroidViewModel {
         Uri videoUri = item.getVideoUri();
         List<SubtitleGenerator.SubtitleEntry> entries = item.getSubtitles();
         if (videoUri == null || entries == null || entries.isEmpty()) {
-            callback.onError("No video or subtitles available to save");
+            callback.onError("沒有可儲存的影片或字幕");
             return;
         }
 
@@ -2385,7 +2385,7 @@ public class MainViewModel extends AndroidViewModel {
 
         item.setStatus(QueueItem.Status.EXPORTING);
         item.setProgress(0);
-        item.setMessage("Saving subtitles...");
+        item.setMessage("正在儲存字幕……");
         refreshQueue();
 
         subtitleGenerator.saveSubtitlesToFile(entries, format, videoUri, outputDir, layerMode, new SubtitleGenerator.SubtitleSaveCallback() {
@@ -2402,7 +2402,7 @@ public class MainViewModel extends AndroidViewModel {
                     }
                     item.setStatus(QueueItem.Status.COMPLETED);
                     item.setProgress(100);
-                    item.setMessage("Subtitles saved: " + filePath);
+                    item.setMessage("字幕已儲存：" + filePath);
                     refreshQueue();
                     callback.onSubtitlesSaved(filePath);
                 });
@@ -2412,7 +2412,7 @@ public class MainViewModel extends AndroidViewModel {
             public void onError(String errorMessage) {
                 handler.post(() -> {
                     item.setStatus(QueueItem.Status.COMPLETED);
-                    item.setMessage("Failed to save: " + errorMessage);
+                    item.setMessage("儲存失敗：" + errorMessage);
                     refreshQueue();
                     callback.onError(errorMessage);
                 });
@@ -2444,7 +2444,7 @@ public class MainViewModel extends AndroidViewModel {
         Uri videoUri = item.getVideoUri();
         List<SubtitleGenerator.SubtitleEntry> entries = item.getSubtitles();
         if (videoUri == null || entries == null || entries.isEmpty()) {
-            callback.onError("No video or subtitles available to export");
+            callback.onError("沒有可匯出的影片或字幕");
             return;
         }
 
@@ -2458,7 +2458,7 @@ public class MainViewModel extends AndroidViewModel {
 
         item.setStatus(QueueItem.Status.EXPORTING);
         item.setProgress(-1);
-        item.setMessage("Exporting video...");
+        item.setMessage("正在匯出影片……");
         refreshQueue();
 
         SubtitleGenerator.ShortsSubtitleStyle shortsStyle = getShortsSubtitleStyle(item);
@@ -2477,15 +2477,15 @@ public class MainViewModel extends AndroidViewModel {
                     }
                     item.setStatus(QueueItem.Status.COMPLETED);
                     item.setProgress(100);
-                    item.setMessage("Video exported: " + filePath);
+                    item.setMessage("影片已匯出：" + filePath);
                     refreshQueue();
                     
                     NotificationHelper.cancelNotification(getApplication(), 3001);
                     NotificationHelper.showSuccessNotification(
                             getApplication(),
                             3001,
-                            "Video Export Complete",
-                            "Video exported successfully: " + item.getDisplayName()
+                            "影片匯出完成",
+                            "影片已成功匯出：" + item.getDisplayName()
                     );
                     
                     callback.onVideoExported(filePath);
@@ -2497,7 +2497,7 @@ public class MainViewModel extends AndroidViewModel {
                 handler.post(() -> {
                     NotificationHelper.cancelNotification(getApplication(), 3001);
                     item.setStatus(QueueItem.Status.COMPLETED);
-                    item.setMessage("Failed to export: " + errorMessage);
+                    item.setMessage("匯出失敗：" + errorMessage);
                     refreshQueue();
                     callback.onError(errorMessage);
                 });
@@ -2507,7 +2507,7 @@ public class MainViewModel extends AndroidViewModel {
             public void onProgressUpdate(int progress) {
                 handler.post(() -> {
                     if (progress < 0) {
-                        item.setMessage("Exporting video...");
+                        item.setMessage("正在匯出影片……");
                     }
                     item.setProgress(progress);
                     refreshQueue();
@@ -2533,7 +2533,7 @@ public class MainViewModel extends AndroidViewModel {
     public void batchSaveSubtitles(String format, File outputDir, SubtitleGenerator.SubtitleSaveCallback callback) {
         List<QueueItem> list = queueItems.getValue();
         if (list == null || list.isEmpty()) {
-            callback.onError("No videos in the queue");
+            callback.onError("佇列中沒有影片");
             return;
         }
 
@@ -2555,7 +2555,7 @@ public class MainViewModel extends AndroidViewModel {
         }
 
         if (completedItems.isEmpty()) {
-            callback.onError(hasSelection ? "No completed selected items with subtitles to export" : "No completed items with subtitles to export");
+            callback.onError(hasSelection ? "所選項目中沒有可匯出的已完成字幕" : "沒有可匯出的已完成字幕項目");
             return;
         }
 
@@ -2571,7 +2571,7 @@ public class MainViewModel extends AndroidViewModel {
     private void batchSaveNext(List<QueueItem> items, int index, String format, File outputDir,
                                SubtitleGenerator.SubtitleSaveCallback callback) {
         if (index >= items.size()) {
-            callback.onSubtitlesSaved("All subtitles exported successfully!");
+            callback.onSubtitlesSaved("字幕已全部匯出！");
             return;
         }
 
@@ -2601,7 +2601,7 @@ public class MainViewModel extends AndroidViewModel {
                                   SubtitleGenerator.VideoExportCallback callback) {
         List<QueueItem> list = queueItems.getValue();
         if (list == null || list.isEmpty()) {
-            callback.onError("No videos in the queue");
+            callback.onError("佇列中沒有影片");
             return;
         }
 
@@ -2623,7 +2623,7 @@ public class MainViewModel extends AndroidViewModel {
         }
 
         if (completedItems.isEmpty()) {
-            callback.onError(hasSelection ? "No completed selected items with subtitles to export" : "No completed items with subtitles to export");
+            callback.onError(hasSelection ? "所選項目中沒有可匯出的已完成字幕" : "沒有可匯出的已完成字幕項目");
             return;
         }
 
@@ -2640,7 +2640,7 @@ public class MainViewModel extends AndroidViewModel {
     private void batchExportNext(List<QueueItem> items, int index, boolean burnSubtitles, String fontName,
                                  File outputDir, SubtitleGenerator.VideoExportCallback callback) {
         if (index >= items.size()) {
-            callback.onVideoExported("All videos exported successfully!");
+            callback.onVideoExported("影片已全部匯出！");
             return;
         }
 
@@ -2675,7 +2675,7 @@ public class MainViewModel extends AndroidViewModel {
             }
         } catch (Exception ignored) {
         }
-        return "Video";
+        return "影片";
     }
 
     @Override

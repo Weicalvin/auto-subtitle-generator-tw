@@ -376,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
                                 "Word-by-word captions",
                                 "Show one recognized word at a time. Best for short-form social clips."),
                         new AppOptionDialog.Option(
-                                "Standard captions",
+                                "標準字幕",
                                 "Create normal subtitle lines. Better for readability and longer speech.")
                 }, "Don't show this again", false, (which, checked) -> {
                     viewModel.setShortsTranscriptionPreferences(which == 0, checked);
@@ -452,7 +452,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (Exception ignored) {
         }
-        return "Video";
+        return "影片";
     }
 
     private boolean isVerticalVideo(Uri uri) {

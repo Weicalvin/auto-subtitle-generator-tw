@@ -44,9 +44,9 @@ public class SettingsFragment extends Fragment {
     };
 
     private static final String[] WHISPER_VAD_AGGRESSIVENESS_LABELS = {
-            "Normal",
-            "Aggressive",
-            "Very aggressive"
+            "一般",
+            "積極",
+            "非常積極"
     };
 
     private static final String[] WHISPER_VAD_AGGRESSIVENESS_VALUES = {
@@ -56,28 +56,28 @@ public class SettingsFragment extends Fragment {
     };
 
     private static final String[] WHISPER_LANGUAGE_LABELS = {
-            "Auto detect",
-            "English",
-            "Turkish",
-            "Spanish",
-            "French",
-            "German",
-            "Italian",
-            "Portuguese",
-            "Dutch",
-            "Polish",
-            "Russian",
-            "Chinese",
-            "Japanese",
-            "Korean",
-            "Arabic",
-            "Hindi",
-            "Vietnamese",
-            "Ukrainian",
-            "Persian",
-            "Greek",
-            "Swedish",
-            "Czech"
+            "自動偵測",
+            "英文",
+            "土耳其文",
+            "西班牙文",
+            "法文",
+            "德文",
+            "義大利文",
+            "葡萄牙文",
+            "荷蘭文",
+            "波蘭文",
+            "俄文",
+            "中文",
+            "日文",
+            "韓文",
+            "阿拉伯文",
+            "印度文",
+            "越南文",
+            "烏克蘭文",
+            "波斯文",
+            "希臘文",
+            "瑞典文",
+            "捷克文"
     };
 
     private static final String[] WHISPER_LANGUAGE_CODES = {
@@ -106,28 +106,28 @@ public class SettingsFragment extends Fragment {
     };
 
     private static final String[] TRANSLATION_SOURCE_LANGUAGE_LABELS = {
-            "Auto from model",
-            "English",
-            "Turkish",
-            "Spanish",
-            "French",
-            "German",
-            "Italian",
-            "Portuguese",
-            "Dutch",
-            "Polish",
-            "Russian",
-            "Chinese",
-            "Japanese",
-            "Korean",
-            "Arabic",
-            "Hindi",
-            "Vietnamese",
-            "Ukrainian",
-            "Persian",
-            "Greek",
-            "Swedish",
-            "Czech"
+            "依模型自動判斷",
+            "英文",
+            "土耳其文",
+            "西班牙文",
+            "法文",
+            "德文",
+            "義大利文",
+            "葡萄牙文",
+            "荷蘭文",
+            "波蘭文",
+            "俄文",
+            "中文",
+            "日文",
+            "韓文",
+            "阿拉伯文",
+            "印度文",
+            "越南文",
+            "烏克蘭文",
+            "波斯文",
+            "希臘文",
+            "瑞典文",
+            "捷克文"
     };
 
     private static final String[] TRANSLATION_SOURCE_LANGUAGE_CODES = {
@@ -156,27 +156,27 @@ public class SettingsFragment extends Fragment {
     };
 
     private static final String[] TRANSLATION_TARGET_LANGUAGE_LABELS = {
-            "English",
-            "Turkish",
-            "Spanish",
-            "French",
-            "German",
-            "Italian",
-            "Portuguese",
-            "Dutch",
-            "Polish",
-            "Russian",
-            "Chinese",
-            "Japanese",
-            "Korean",
-            "Arabic",
-            "Hindi",
-            "Vietnamese",
-            "Ukrainian",
-            "Persian",
-            "Greek",
-            "Swedish",
-            "Czech"
+            "英文",
+            "土耳其文",
+            "西班牙文",
+            "法文",
+            "德文",
+            "義大利文",
+            "葡萄牙文",
+            "荷蘭文",
+            "波蘭文",
+            "俄文",
+            "中文",
+            "日文",
+            "韓文",
+            "阿拉伯文",
+            "印度文",
+            "越南文",
+            "烏克蘭文",
+            "波斯文",
+            "希臘文",
+            "瑞典文",
+            "捷克文"
     };
 
     private static final String[] TRANSLATION_TARGET_LANGUAGE_CODES = {

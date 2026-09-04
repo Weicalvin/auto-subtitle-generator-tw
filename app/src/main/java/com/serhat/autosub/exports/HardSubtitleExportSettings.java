@@ -193,9 +193,9 @@ public final class HardSubtitleExportSettings {
         sourceText.setText(sourceDescription(source));
 
         new MaterialAlertDialogBuilder(context)
-                .setTitle("Hard subtitle video")
+                .setTitle("硬字幕影片")
                 .setView(view)
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("取消", null)
                 .setPositiveButton("Continue", (dialog, which) -> {
                     int selectedResolution = Math.max(0,
                             resolutionLabels.indexOf(resolutionDropdown.getText().toString()));

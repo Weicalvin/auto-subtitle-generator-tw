@@ -195,7 +195,7 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
                     .setTitle("Download Gemma 4 E2B")
                     .setMessage("The local Shorts editor is about 2.6 GB. Download it from Models before analyzing this transcript.")
                     .setPositiveButton("Open Models", (dialog, which) -> viewModel.openModelsForGemma())
-                    .setNegativeButton("Cancel", null)
+                    .setNegativeButton("取消", null)
                     .show();
             return;
         }
@@ -219,7 +219,7 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
                     .setTitle("Limited device memory")
                     .setMessage("Gemma 4 E2B is designed for devices with at least 8 GB RAM. Loading it here may be slow or the system may close AutoSub.")
                     .setPositiveButton("Try anyway", (dialog, which) -> continueAction.run())
-                    .setNegativeButton("Cancel", null)
+                    .setNegativeButton("取消", null)
                     .show();
         } else continueAction.run();
     }
@@ -251,7 +251,7 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
                     }
                     viewModel.preparePhraseMontage(item, phrase, keepWholeSubtitle.isChecked());
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("取消", null)
                 .show();
     }
 
@@ -350,10 +350,10 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
                     "This queue item has two exported video files.",
                     new AppOptionDialog.Option[]{
                             new AppOptionDialog.Option(
-                                    "Soft subtitles",
+                                    "軟字幕",
                                     "Open the video with selectable subtitle tracks."),
                             new AppOptionDialog.Option(
-                                    "Hard subtitles",
+                                    "硬字幕",
                                     "Open the video with subtitles burned into the image.")
                     }, which -> openVideoFile(which == 0 ? soft : hard));
         } else if (!soft.isEmpty()) {
@@ -395,10 +395,10 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
                 "Choose how subtitles should be included in the exported video.",
                 new AppOptionDialog.Option[]{
                         new AppOptionDialog.Option(
-                                "Soft subtitles",
+                                "軟字幕",
                                 "Add a subtitle track that can be turned on or off in compatible players."),
                         new AppOptionDialog.Option(
-                                "Hard subtitles",
+                                "硬字幕",
                                 "Burn subtitles into the video image so they show everywhere.")
                 }, which -> {
                     boolean burnSubtitles = (which == 1);
@@ -419,8 +419,8 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
                 "Subtitles are retimed to match the joined video.",
                 new AppOptionDialog.Option[]{
                         new AppOptionDialog.Option("Video only", "Export the joined video without subtitles."),
-                        new AppOptionDialog.Option("Soft subtitles", "Add a selectable, correctly retimed subtitle track."),
-                        new AppOptionDialog.Option("Hard subtitles", "Burn correctly retimed subtitles into the video."),
+                        new AppOptionDialog.Option("軟字幕", "Add a selectable, correctly retimed subtitle track."),
+                        new AppOptionDialog.Option("硬字幕", "Burn correctly retimed subtitles into the video."),
                         new AppOptionDialog.Option("SRT subtitles", "Export only a correctly retimed SRT file."),
                         new AppOptionDialog.Option("VTT subtitles", "Export only a correctly retimed VTT file.")
                 }, which -> {
@@ -469,7 +469,7 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
                                     "Retranslate",
                                     "Replace the existing translated text using current Settings."),
                             new AppOptionDialog.Option(
-                                    "Cancel",
+                                    "取消",
                                     "Keep the current translation unchanged.")
                     }, which -> {
                         if (which == 0) {
@@ -492,7 +492,7 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
             @Override
             public void onError(String errorMessage) {
                 if (!isAdded()) return;
-                Toast.makeText(requireContext(), "Translation failed: " + errorMessage, Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), "翻譯失敗：" + errorMessage, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -508,7 +508,7 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
 
     private void chooseQueueSoftExportFormat(QueueItem item, SubtitleGenerator.SubtitleLayerMode layerMode) {
         AppOptionDialog.show(requireContext(),
-                "Soft subtitle format",
+                "軟字幕格式",
                 "Adjusted subtitle positions need a container that can preserve styling.",
                 new AppOptionDialog.Option[]{
                         new AppOptionDialog.Option(
@@ -522,7 +522,7 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
 
     private void exportQueueVideo(QueueItem item, boolean burnSubtitles, String fontName, boolean forceMp4SoftSubtitles,
                                   SubtitleGenerator.SubtitleLayerMode layerMode) {
-        ExportFolderDialog.show(this, "Export to folder", outputDir ->
+        ExportFolderDialog.show(this, "匯出至資料夾", outputDir ->
                 executeVideoExport(item, burnSubtitles, fontName, forceMp4SoftSubtitles, outputDir, layerMode));
     }
 
@@ -585,7 +585,7 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
                 }, which -> {
                     String format = (which == 0 ? "srt" : "vtt");
                     chooseSubtitleLayerMode(item, layerMode ->
-                            ExportFolderDialog.show(this, "Save to folder", outputDir ->
+                            ExportFolderDialog.show(this, "儲存至資料夾", outputDir ->
                                     executeSaveSubtitles(item, format, outputDir, layerMode)));
                 });
     }
@@ -602,7 +602,7 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
             @Override
             public void onError(String errorMessage) {
                 if (!isAdded()) return;
-                if (errorMessage != null && errorMessage.startsWith("Already exported subtitles")) {
+                if (errorMessage != null && errorMessage.startsWith("字幕已匯出")) {
                     showAlreadyExistsDialog(errorMessage, false, () -> {
                         String prefix = "Already exported subtitles for this video and model: ";
                         String filename = errorMessage.substring(prefix.length());
@@ -635,12 +635,12 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
             return;
         }
         AppOptionDialog.show(requireContext(),
-                "Subtitle language",
-                "Choose which subtitle text to export.",
+                "字幕語言",
+                "選擇要匯出的字幕文字。",
                 new AppOptionDialog.Option[]{
-                        new AppOptionDialog.Option("Original", "Export the source subtitles."),
-                        new AppOptionDialog.Option("Translation", "Export the translated subtitles."),
-                        new AppOptionDialog.Option("Double", "Export original first, translation second.")
+                        new AppOptionDialog.Option("原文", "匯出原文字幕。"),
+                        new AppOptionDialog.Option("翻譯", "匯出翻譯字幕。"),
+                        new AppOptionDialog.Option("Double", "先匯出原文，再匯出翻譯。")
                 }, which -> {
                     if (which == 1) {
                         callback.onChosen(SubtitleGenerator.SubtitleLayerMode.TRANSLATION);
@@ -659,16 +659,16 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
         String prefix = isVideo ? "Already exported this video with this model: " : "Already exported subtitles for this video and model: ";
         String filename = errorMessage.substring(prefix.length());
 
-        String title = isVideo ? "Video Already Exported" : "Subtitles Already Saved";
-        String message = "The following file already exists in your export library folder:\n\n" + filename + "\n\nWould you like to overwrite it, open/play it, or share it?";
+        String title = isVideo ? "影片已匯出" : "字幕已儲存";
+        String message = "以下檔案已存在於匯出資料夾：\n\n" + filename + "\n\nWould you like to overwrite it, open/play it, or share it?";
 
         AppOptionDialog.Option[] options = new AppOptionDialog.Option[]{
                 new AppOptionDialog.Option(R.drawable.ri_delete_bin_line,
-                        "Overwrite File", "Replace the existing file with your new export."),
+                        "覆寫檔案", "Replace the existing file with your new export."),
                 new AppOptionDialog.Option(isVideo ? R.drawable.ri_play_circle_line : R.drawable.ri_file_text_line,
-                        isVideo ? "Play Video" : "Open Subtitles", isVideo ? "Watch the previously exported video." : "View the previously saved subtitle file."),
+                        isVideo ? "播放影片" : "開啟字幕", isVideo ? "觀看先前匯出的影片。" : "檢視先前儲存的字幕檔。"),
                 new AppOptionDialog.Option(R.drawable.ri_share_line,
-                        "Share Existing File", "Send the existing file to another application.")
+                        "分享現有檔案", "Send the existing file to another application.")
         };
 
         AppOptionDialog.show(requireContext(), title, message, options, which -> {
@@ -890,7 +890,7 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
                                 "Word-by-word captions",
                                 "Show one recognized word at a time. Best for short-form social clips."),
                         new AppOptionDialog.Option(
-                                "Standard captions",
+                                "標準字幕",
                                 "Create normal subtitle lines. Better for readability and longer speech.")
                 }, "Don't show this again", false, (which, checked) -> {
                     viewModel.setShortsTranscriptionPreferences(which == 0, checked);
@@ -1078,7 +1078,7 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
             }
         } catch (Exception ignored) {
         }
-        return "Video";
+        return "影片";
     }
 
     private boolean isVerticalVideo(Uri uri) {
@@ -1148,12 +1148,12 @@ public class GenerateFragment extends Fragment implements ActionMode.Callback {
             new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Delete Selected Items")
                     .setMessage("Are you sure you want to remove the " + selectedCount + " selected items from the queue?")
-                    .setPositiveButton("Delete", (dialog, which) -> {
+                    .setPositiveButton("刪除", (dialog, which) -> {
                         viewModel.removeSelectedQueueItems();
                         Toast.makeText(requireContext(), "Selected items removed", Toast.LENGTH_SHORT).show();
                         mode.finish();
                     })
-                    .setNegativeButton("Cancel", null)
+                    .setNegativeButton("取消", null)
                     .show();
             return true;
         } else if (id == R.id.action_export_selected) {

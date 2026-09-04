@@ -65,7 +65,7 @@ public final class ExportFolderDialog {
                     callback.onSelected(folder);
                 })
                 .setNeutralButton("New folder", null)
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("取消", null)
                 .create();
 
         dialog.setOnShowListener(d -> dialog.getButton(DialogInterface.BUTTON_NEUTRAL)
@@ -107,7 +107,7 @@ public final class ExportFolderDialog {
                         callback.onSelected(folder);
                     }
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("取消", null)
                 .show();
     }
 
