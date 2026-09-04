@@ -34,6 +34,7 @@ import com.serhat.autosub.models.ModelsFragment;
 import com.serhat.autosub.shorts.ShortsReviewFragment;
 import com.serhat.autosub.ui.common.AppOptionDialog;
 import com.serhat.autosub.ui.generate.GenerateFragment;
+import com.serhat.autosub.ui.media.MediaPlayerFragment;
 import com.serhat.autosub.ui.preview.PreviewFragment;
 import com.serhat.autosub.ui.settings.SettingsFragment;
 
@@ -195,17 +196,20 @@ public class MainActivity extends AppCompatActivity {
         androidx.fragment.app.FragmentTransaction transaction = fm.beginTransaction();
 
         String generateTag = "generate";
+        String mediaPlayerTag = "media_player";
         String modelsTag = "models";
         String exportsTag = "exports";
         String settingsTag = "settings";
 
         Fragment generate = fm.findFragmentByTag(generateTag);
+        Fragment mediaPlayer = fm.findFragmentByTag(mediaPlayerTag);
         Fragment models = fm.findFragmentByTag(modelsTag);
         Fragment exports = fm.findFragmentByTag(exportsTag);
         Fragment settings = fm.findFragmentByTag(settingsTag);
 
         // Hide all first
         if (generate != null) transaction.hide(generate);
+        if (mediaPlayer != null) transaction.hide(mediaPlayer);
         if (models != null) transaction.hide(models);
         if (exports != null) transaction.hide(exports);
         if (settings != null) transaction.hide(settings);
@@ -219,6 +223,14 @@ public class MainActivity extends AppCompatActivity {
                 transaction.show(generate);
             }
             title = getString(R.string.app_name);
+        } else if (itemId == R.id.nav_media_player) {
+            if (mediaPlayer == null) {
+                mediaPlayer = new MediaPlayerFragment();
+                transaction.add(R.id.contentHost, mediaPlayer, mediaPlayerTag);
+            } else {
+                transaction.show(mediaPlayer);
+            }
+            title = "播放器";
         } else if (itemId == R.id.nav_models) {
             if (models == null) {
                 models = new ModelsFragment();
@@ -258,6 +270,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (fm.findFragmentByTag("generate") != null && !fm.findFragmentByTag("generate").isHidden()) {
             activeFragment = fm.findFragmentByTag("generate");
+        } else if (fm.findFragmentByTag("media_player") != null && !fm.findFragmentByTag("media_player").isHidden()) {
+            activeFragment = fm.findFragmentByTag("media_player");
         } else if (fm.findFragmentByTag("models") != null && !fm.findFragmentByTag("models").isHidden()) {
             activeFragment = fm.findFragmentByTag("models");
         } else if (fm.findFragmentByTag("exports") != null && !fm.findFragmentByTag("exports").isHidden()) {
